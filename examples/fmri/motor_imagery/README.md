@@ -6,3 +6,5 @@ synchronized at the beginning of each block. A
 [BrainVoyager](http://brainvoyager.com) `.prt` file is saved at the end of the
 experiment.
 
+## Author
+Florian Krause (florian@expyriment.org)
