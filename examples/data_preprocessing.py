@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 
 """
-Example preprocessing script for [snarc_experiment.py](https://github.com/expyriment/expyriment-stash/blob/master/examples/behavioural/snarc_experiment.py)
+Example preprocessing script for `snarc_experiment.py`
+(https://github.com/expyriment/expyriment-stash/blob/master/examples/behavioural/snarc_experiment.py)
 
 The current script produces two files for different analysis of the SNARC
 effect (ANOVA vs. slopes analysis) using mean and median RTs
