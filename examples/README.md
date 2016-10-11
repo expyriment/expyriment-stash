@@ -1,5 +1,5 @@
-Example Experiments
--------------------
+Examples
+--------
 
 Here you can find a collection Expyriment example scripts.
 
