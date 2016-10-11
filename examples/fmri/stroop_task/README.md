@@ -6,3 +6,6 @@ two buttons. Event order and length is loaded from a
 [BrainVoygaer](http://brainvoyager.com) `.prt` file for each participant. At
 the end of the experiment an ouput .prt file is saved, reflecting congruent,
 incongruent and erroneous trials.
+
+## Author
+Florian Krause (florian@expyriment.org)
