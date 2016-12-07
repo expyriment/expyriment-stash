@@ -11,6 +11,7 @@ class OSFSync(object):
     def __init__(self, osf_project_file = "osfsync.proj"):
         """ If project file exists, use this & connect.
         """
+        self.clear_connection_details()
         self.osf_project_file = path.realpath(osf_project_file)
         if path.isfile(osf_project_file):
             try:
@@ -23,6 +24,8 @@ class OSFSync(object):
         if self._project is not None:
             print("Connected to OSF project '{0}'.".format(self._project.project_id))
 
+
+    def clear_connection_details(self):
         self.osf_username = None
         self.osf_project_id = None
         self.sync_folder = None
@@ -33,29 +36,40 @@ class OSFSync(object):
         return self._project is not None
 
 
-    def set_connection_details(self,osf_username=None, osf_project_id=None, sync_folder=None):
-        """Ask via command line for all required details that are specified.
-        """
+    def set_username(self, osf_username=None):
+        """Set usename if specified otherwise ask via command line if not yet defined."""
 
-        if osf_username is None:
+        if osf_username is None and self.osf_username is None:
             osf_username = input("OSF Username: ")
-        self.osf_username = osf_username
+        if osf_username is not None:
+            self.osf_username = osf_username
 
-        if osf_project_id is None:
+
+    def set_connection_details(self, osf_username=None, osf_project_id=None, sync_folder=None):
+        """Set connection details if specified otherwise ask via command line for all connection details
+        that are not yet defined."""
+
+        self.set_username(osf_username=osf_username)
+
+        if osf_project_id is None and self.osf_project_id is None:
             osf_project_id = input("OSF project id: ")
-        self.osf_project_id = osf_project_id
+        if osf_project_id is not None:
+            self.osf_project_id = osf_project_id
 
-        if sync_folder is None:
+        if sync_folder is None and self.sync_folder is None:
             sync_folder = input("Sync subfolder [default='data']: ")
             if len(sync_folder)<1:
                 sync_folder = 'data'
-        self.sync_folder = path.realpath(sync_folder)
+        if sync_folder is not None:
+            self.sync_folder = path.realpath(sync_folder)
 
 
     def get_auth_token(self, password=None):
         """Gets the auth token
 
         see also pyosf documentation"""
+
+        self.set_username()
 
         if password is None:
             password = getpass.getpass()
@@ -68,8 +82,7 @@ class OSFSync(object):
     def connect(self):
         """connect with OSF project"""
 
-        if self.osf_username is None:
-            self.set_connection_details()
+        self.set_connection_details()
 
         try:
             session = pyosf.Session(username=self.osf_username)
