@@ -6,10 +6,10 @@ import getpass
 import pyosf
 
 class OSFSync(object):
-    """High-level class from synchronizing subfolder with OSF project files"""
+    """High-level class for synchronizing subfolders with OSF project files"""
 
     def __init__(self, osf_project_file = "osfsync.proj"):
-        """ If project file exist use this and connect.
+        """ If project file exists, use this & connect.
         """
         self.osf_project_file = path.realpath(osf_project_file)
         if path.isfile(osf_project_file):
@@ -23,10 +23,12 @@ class OSFSync(object):
         if self._project is not None:
             print("Connected to OSF project '{0}'.".format(self._project.project_id))
 
+        self.osf_username = None
+        self.osf_project_id = None
+        self.sync_folder = None
 
     def is_connected(self):
-        """Returns True if connect to project
-        """
+        """Returns True if connected to project"""
 
         return self._project is not None
 
@@ -64,8 +66,10 @@ class OSFSync(object):
             return False
 
     def connect(self):
-        """connect with OSF project
-        """
+        """connect with OSF project"""
+
+        if self.osf_username is None:
+            self.set_connection_details()
 
         try:
             session = pyosf.Session(username=self.osf_username)
@@ -80,7 +84,8 @@ class OSFSync(object):
                                       root_path=self.sync_folder,
                                       osf=osf_proj)
         except:
-            print("Could not connect to OSF project '{0}'.".format(self.osf_project_id))
+            print("Could not connect to OSF project '{0}'.".format(
+                            self.osf_project_id))
             self._project = None
             return False
 
@@ -97,16 +102,17 @@ def osf_sync_files():
     """High-level OSF sync function to be used via command line.
     """
 
-    x = OSFSync()
+    osf = OSFSync()
 
-    if not x.is_connected():
-        x.set_connection_details()
-        if not x.connect():
-            x.get_auth_token()
-            x.connect()
+    if not osf.is_connected():
+        osf.connect()
+        if not osf.is_connected():
+            osf.get_auth_token()
+            osf.connect()
 
-    sync_info = x.sync()
+    sync_info = osf.sync()
     print(sync_info)
+
 
 if __name__ == "__main__":
     osf_sync_files()
