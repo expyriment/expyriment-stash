@@ -25,9 +25,9 @@ import tempfile
 import shutil
 import random
 
-from . import defaults
-from ...stimuli import defaults as stim_defaults
-from ...stimuli._audio import Audio
+from . import _noisetone_defaults as defaults
+from expyriment.stimuli import defaults as stim_defaults
+from expyriment.stimuli._audio import Audio
 
 
 class NoiseTone(Audio):

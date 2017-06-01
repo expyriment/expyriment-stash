@@ -23,8 +23,8 @@ try:
 except:
     parallel = None
 
-from ... import _internals
-from  ...io._input_output  import Input, Output
+from expyriment import _internals
+from expyriment.io._input_output  import Input, Output
 
 
 class SimpleParallelPort(Input, Output):

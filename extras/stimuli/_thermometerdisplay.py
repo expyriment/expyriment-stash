@@ -18,9 +18,9 @@ __date__ = ''
 
 import pygame
 
-from . import defaults
-from ...stimuli import Rectangle
-from ...stimuli._visual import Visual
+from . import _thermometerdisplay_defaults as defaults
+from expyriment.stimuli import Rectangle
+from expyriment.stimuli._visual import Visual
 
 
 class ThermometerDisplay(Visual):

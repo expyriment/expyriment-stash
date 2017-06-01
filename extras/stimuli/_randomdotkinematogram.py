@@ -20,12 +20,12 @@ __date__ = ''
 import math
 import random
 
-from . import defaults
+from . import _randomdotkinematogram_defaults as defaults
 
-from ...io import Keyboard
-from ...stimuli import Canvas, Circle
-from ...stimuli._stimulus import Stimulus
-from ...misc import Clock
+from expyriment.io import Keyboard
+from expyriment.stimuli import Canvas, Circle
+from expyriment.stimuli._stimulus import Stimulus
+from expyriment.misc import Clock
 
 
 

@@ -20,8 +20,8 @@ try:
 except:
     _pyxid = None
 
-from ...io._input_output import Input
-from ... import _internals, stimuli, misc
+from expyriment.io._input_output import Input
+from expyriment import _internals, stimuli, misc
 
 
 class CedrusResponseDevice(Input):

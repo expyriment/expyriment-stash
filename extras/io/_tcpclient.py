@@ -18,11 +18,11 @@ import errno
 from types import FunctionType
 
 from . import _tcpclient_defaults as defaults
-from ... import _internals
-from ...misc._timer import get_time
-from ..._internals import CallbackQuitEvent
-from ...io._keyboard import Keyboard
-from ...io._input_output import Input, Output
+from expyriment import _internals
+from expyriment.misc._timer import get_time
+from expyriment._internals import CallbackQuitEvent
+from expyriment.io._keyboard import Keyboard
+from expyriment.io._input_output import Input, Output
 
 
 class TcpClient(Input, Output):

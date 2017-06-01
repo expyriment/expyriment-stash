@@ -20,10 +20,10 @@ import locale
 import re
 import codecs
 
-from ..._internals import is_base_string
-from ...design.randomize import rand_int, rand_element
-from ...design import Block, Trial
-from ...misc import unicode2byte, byte2unicode, create_colours
+from expyriment._internals import is_base_string
+from expyriment.design.randomize import rand_element
+from expyriment.design import Block, Trial
+from expyriment.misc import unicode2byte, byte2unicode, create_colours
 
 
 class StimulationProtocol(object):

@@ -18,11 +18,11 @@ __date__ = ''
 
 
 import math
-from . import defaults
+from . import _polygonline_defaults as defaults
 
 from ._polygonrectangle import PolygonRectangle
-from ... import _internals
-from ... import misc
+from expyriment import _internals
+from expyriment import misc
 
 
 class PolygonLine(PolygonRectangle):

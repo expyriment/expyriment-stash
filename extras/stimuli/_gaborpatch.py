@@ -19,9 +19,9 @@ import os
 import tempfile
 from types import ModuleType
 
-from ...stimuli._picture import Picture
-from ... import stimuli
-from . import defaults
+from expyriment.stimuli._picture import Picture
+from expyriment import stimuli
+from . import _gaborpatch_defaults as defaults
 
 try:
     import numpy as np

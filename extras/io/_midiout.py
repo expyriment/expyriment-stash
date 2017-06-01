@@ -15,8 +15,8 @@ __date__ = ''
 
 from types import ModuleType
 from . import _midiout_defaults as defaults
-from ... import _internals
-from ...io._input_output import Output
+from expyriment import _internals
+from expyriment.io._input_output import Output
 
 try:
     from pygame import midi as _midi

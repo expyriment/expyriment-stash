@@ -26,10 +26,10 @@ try:
 except:
     Image = None
 
-from ... import _internals, stimuli
-from ...misc._timer import get_time
-from ...stimuli._picture import Picture
-from . import defaults
+from expyriment import _internals, stimuli
+from expyriment.misc._timer import get_time
+from expyriment.stimuli._picture import Picture
+from . import _visualmask_defaults as defaults
 
 
 class VisualMask(Picture):

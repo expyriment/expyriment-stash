@@ -15,11 +15,11 @@ __date__ = ''
 
 from types import ModuleType, FunctionType
 from . import _midiin_defaults as defaults
-from ... import _internals
-from ..._internals import CallbackQuitEvent
-from ...misc._timer import get_time
-from ...io._keyboard import Keyboard
-from ...io._input_output import Input
+from expyriment import _internals
+from expyriment._internals import CallbackQuitEvent
+from expyriment.misc._timer import get_time
+from expyriment.io._keyboard import Keyboard
+from expyriment.io._input_output import Input
 
 
 import time

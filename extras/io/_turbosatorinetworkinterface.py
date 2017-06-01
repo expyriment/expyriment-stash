@@ -18,10 +18,10 @@ __date__ = ''
 import struct
 
 from . import _turbosatorinetworkinterface_defaults as defaults
-from ...misc._timer import get_time
-from ...misc._miscellaneous import byte2unicode
-from ...io._input_output import Input, Output
-from ...io.extras._tcpclient import TcpClient
+from expyriment.misc._timer import get_time
+from expyriment.misc._miscellaneous import byte2unicode
+from expyriment.io._input_output import Input, Output
+from ._tcpclient import TcpClient
 
 
 class TurbosatoriNetworkInterface(Input, Output):

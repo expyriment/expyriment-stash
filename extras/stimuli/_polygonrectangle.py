@@ -16,9 +16,9 @@ __revision__ = ''
 __date__ = ''
 
 
-from . import defaults
-from ...stimuli._shape import Shape
-from ... import _internals
+from . import _polygonrectangle_defaults as defaults
+from expyriment.stimuli._shape import Shape
+from expyriment import _internals
 
 class PolygonRectangle(Shape):
     """A class implementing a rectangle stimulus."""

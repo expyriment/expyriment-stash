@@ -20,9 +20,9 @@ import random
 
 import pygame
 
-from . import defaults
-from ... import _internals
-from ...stimuli._visual import Visual
+from . import _stimuluscloud_defaults as defaults
+from expyriment import _internals
+from expyriment.stimuli._visual import Visual
 
 
 class StimulusCloud(Visual):

@@ -17,9 +17,9 @@ __date__ = ''
 
 
 import math as _math
-from . import defaults
-from ...stimuli._shape import Shape
-from ...misc import geometry as _geometry
+from . import _polygonellipse_defaults as defaults
+from expyriment.stimuli._shape import Shape
+from expyriment.misc import geometry as _geometry
 
 
 class PolygonEllipse(Shape):

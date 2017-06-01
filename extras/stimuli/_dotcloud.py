@@ -20,10 +20,10 @@ __date__ = ''
 import random
 import pygame
 
-from ... import _internals, stimuli
-from ...stimuli._visual import Visual
-from ...stimuli._circle import Circle
-from . import  defaults
+from expyriment import _internals, stimuli
+from expyriment.stimuli._visual import Visual
+from expyriment.stimuli._circle import Circle
+from . import _dotcloud_defaults as defaults
 
 
 class DotCloud(Visual):

@@ -22,10 +22,10 @@ import copy
 
 import pygame
 
-from . import defaults
-from ... import _internals, stimuli
-from ...stimuli._visual import Visual
-from ...stimuli.extras._polygondot import PolygonDot
+from . import _lcdsymbol_defaults as defaults
+from expyriment import _internals, stimuli
+from expyriment.stimuli._visual import Visual
+from ._polygondot import PolygonDot
 
 
 class LcdSymbol(Visual):

@@ -17,8 +17,8 @@ __revision__ = ''
 __date__ = ''
 
 
-from . import defaults
-from ...stimuli.extras._polygonellipse import PolygonEllipse
+from . import _polygondot_defaults as defaults
+from ._polygonellipse import PolygonEllipse
 
 class PolygonDot(PolygonEllipse):
     """A class implementing a dot as a child of PolygonEllipse."""
