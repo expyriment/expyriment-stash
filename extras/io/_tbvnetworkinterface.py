@@ -20,7 +20,7 @@ from . import _tbvnetworkinterface_defaults as defaults
 
 from expyriment import _internals
 from expyriment.misc._timer import get_time
-from expyriment.misc._miscellaneous import byte2unicode
+from expyriment.misc._miscellaneous import byte2unicode, unicode2byte
 from expyriment.io._input_output import Input, Output
 from ._tcpclient import TcpClient
 
@@ -140,7 +140,7 @@ class TbvNetworkInterface(Input, Output):
                                             struct.unpack('!i', data[4:8])[0],
                                             struct.unpack('!i', data[8:])[0])
             except:
-                raise RuntimeError("Requesting a socket failed!")
+                raise RuntimeError("Connecting to TBV failed!")
             self._is_connected = True
             if self._logging:
                 _internals.active_exp._event_file_log(
@@ -154,7 +154,7 @@ class TbvNetworkInterface(Input, Output):
             for arg in args:
                 arg_length += len(arg)
         data = struct.pack('!q', length + 5 + arg_length) + \
-            "\x00\x00\x00{0}{1}\x00".format(chr(length + 1), message)
+            b"\x00\x00\x00" + unicode2byte(chr(length + 1)) + message + b"\x00"
         if len(args) > 0:
             for arg in args:
                 data += arg
@@ -192,6 +192,7 @@ class TbvNetworkInterface(Input, Output):
 
         start = get_time()
         self._tcp.clear()
+        request = unicode2byte(request)
         self._send(request, *args)
         data = self._wait()
         if data is None:
@@ -997,7 +998,7 @@ class TbvNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             return ([struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
-                     for x in range(0, len(data) // 4)], rt)
+                     for x in range(1, len(data) // 4)], rt)
 
     def get_pearson_correlation_at_time_point(self, window_size, time_point):  # TODO: Needs testing!
         """Get Pearson correlation at specified time point.
@@ -1029,7 +1030,7 @@ class TbvNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             return ([struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
-                     for x in range(0, len(data) // 4)], rt)
+                     for x in range(2, len(data) // 4)], rt)
 
     def get_partial_correlation(self, window_size):  # TODO: Needs testing!
         """Get partial correlation at current time point.
@@ -1059,7 +1060,7 @@ class TbvNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             return ([struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
-                     for x in range(0, len(data) // 4)], rt)
+                     for x in range(1, len(data) // 4)], rt)
 
     def get_partial_correlation_at_time_point(self, window_size, time_point):  # TODO: Needs testing!
         """Get partial correlation at specified time point.
@@ -1092,4 +1093,4 @@ class TbvNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             return ([struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
-                     for x in range(0, len(data) // 4)], rt)
+                     for x in range(2, len(data) // 4)], rt)
