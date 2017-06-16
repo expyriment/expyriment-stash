@@ -488,20 +488,20 @@ class TbvNetworkInterface(Input, Output):
 
         Returns
         -------
-        nr_rois : int
+        n_rois : int
             The number of ROIs.
         rt : int
             The time it took to get the data.
 
         """
 
-        nr_rois, rt = self.request_data("tGetNrOfROIs")
-        if nr_rois is None:
+        n_rois, rt = self.request_data("tGetNrOfROIs")
+        if n_rois is None:
             return None, rt
-        elif nr_rois[:14] == "Wrong request!":
-            raise Exception("Wrong request!: '{0}'".format(nr_rois[19:-1]))
+        elif n_rois[:14] == "Wrong request!":
+            raise Exception("Wrong request!: '{0}'".format(n_rois[19:-1]))
         else:
-            return struct.unpack('!i', nr_rois)[0], rt
+            return struct.unpack('!i', n_rois)[0], rt
 
     def get_mean_of_roi(self, roi):
         """Get the mean of a ROI.
@@ -925,7 +925,7 @@ class TbvNetworkInterface(Input, Output):
             return ([struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
                      for x in range(0, len(data) // 4)], rt)
 
-    # SVM Access Functions
+    # SVM Access
     def get_number_of_classes(self):
         """Get the number of classes.
 
@@ -961,6 +961,131 @@ class TbvNetworkInterface(Input, Output):
 
         data, rt = self.request_data(
             "tGetCurrentClassifierOutput")
+        if data is None:
+            return None, rt
+        elif data[:14] == "Wrong request!":
+            raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
+        else:
+            return ([struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
+                     for x in range(0, len(data) // 4)], rt)
+
+    # Functional Connectivity
+    def get_pearson_correlation(self, window_size):  # TODO: Needs testing!
+        """Get Pearson correlation at current time point.
+
+        Parameters
+        ----------
+        window_size : int
+            The size of the window in volumes.
+
+        Returns
+        -------
+        correlations : list
+            The list of correlations between pairs of ROIs
+            [(x, y) for x in rois for y in rois if x < y].
+        rt : int
+            The time it took to get the data.
+
+        """
+
+        window_size = struct.pack('!i', window_size)
+        data, rt = self.request_data(
+            "tGetPearsonCorrelation", window_size)
+        if data is None:
+            return None, rt
+        elif data[:14] == "Wrong request!":
+            raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
+        else:
+            return ([struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
+                     for x in range(0, len(data) // 4)], rt)
+
+    def get_pearson_correlation_at_time_point(self, window_size, time_point):  # TODO: Needs testing!
+        """Get Pearson correlation at specified time point.
+
+        Parameters
+        ----------
+        window_size : int
+            The size of the window in volumes.
+        time_point : int
+            The time point.
+
+        Returns
+        -------
+        correlations : list
+            The list of correlations between pairs of ROIs
+            [(x, y) for x in rois for y in rois if x < y].
+        rt : int
+            The time it took to get the data.
+
+        """
+
+        window_size = struct.pack('!i', window_size)
+        time_point = struct.pack('!i', time_point)
+        data, rt = self.request_data(
+            "tGetPearsonCorrelationAtTimePoint", window_size, time_point)
+        if data is None:
+            return None, rt
+        elif data[:14] == "Wrong request!":
+            raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
+        else:
+            return ([struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
+                     for x in range(0, len(data) // 4)], rt)
+
+    def get_partion_correlation(self, window_size):  # TODO: Needs testing!
+        """Get partial correlation at current time point.
+
+        Parameters
+        ----------
+        window_size : int
+            The size of the window in volumes.
+
+        Returns
+        -------
+        correlations : list
+            The list of correlations between pairs of ROIs
+            [(x, y) for x in rois for y in rois if x < y]
+            while controlling for effects of combination of remaining ROIs.
+        rt : int
+            The time it took to get the data.
+
+        """
+
+        window_size = struct.pack('!i', window_size)
+        data, rt = self.request_data(
+            "tGetPartialCorrelation", window_size)
+        if data is None:
+            return None, rt
+        elif data[:14] == "Wrong request!":
+            raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
+        else:
+            return ([struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
+                     for x in range(0, len(data) // 4)], rt)
+
+    def get_pearson_correlation_at_time_point(self, window_size, time_point):  # TODO: Needs testing!
+        """Get partial correlation at specified time point.
+
+        Parameters
+        ----------
+        window_size : int
+            The size of the window in volumes.
+        time_point : int
+            The time point.
+
+        Returns
+        -------
+        correlations : list
+            The list of correlations between pairs of ROIs
+            [(x, y) for x in rois for y in rois if x < y]
+            while controlling for effects of combination of remaining ROIs.
+        rt : int
+            The time it took to get the data.
+
+        """
+
+        window_size = struct.pack('!i', window_size)
+        time_point = struct.pack('!i', time_point)
+        data, rt = self.request_data(
+            "tGetPartialCorrelationAtTimePoint", window_size, time_point)
         if data is None:
             return None, rt
         elif data[:14] == "Wrong request!":
