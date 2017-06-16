@@ -1031,7 +1031,7 @@ class TbvNetworkInterface(Input, Output):
             return ([struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
                      for x in range(0, len(data) // 4)], rt)
 
-    def get_partion_correlation(self, window_size):  # TODO: Needs testing!
+    def get_partial_correlation(self, window_size):  # TODO: Needs testing!
         """Get partial correlation at current time point.
 
         Parameters
@@ -1061,7 +1061,7 @@ class TbvNetworkInterface(Input, Output):
             return ([struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
                      for x in range(0, len(data) // 4)], rt)
 
-    def get_pearson_correlation_at_time_point(self, window_size, time_point):  # TODO: Needs testing!
+    def get_partial_correlation_at_time_point(self, window_size, time_point):  # TODO: Needs testing!
         """Get partial correlation at specified time point.
 
         Parameters
