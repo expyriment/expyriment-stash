@@ -61,13 +61,6 @@ class CedrusResponseDevice:
 
         """
 
-        from ._cerdusresponsedevice import CedrusResponseDevice
+        from ._cedrusresponsedevice import CedrusResponseDevice
         self.__class__ = CedrusResponseDevice
         CedrusResponseDevice.__init__(self, device_ID, error_screen)
-
-    if isinstance(_pyxid, ModuleType):
-        @staticmethod
-        def _self_test(experiment):
-            result = {}
-            result['CedrusResponseDevice'] = ""  # TODO: Implement test!
-            return result

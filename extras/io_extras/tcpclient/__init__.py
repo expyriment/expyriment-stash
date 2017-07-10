@@ -13,7 +13,7 @@ __revision__ = ''
 __date__ = ''
 
 
-class TcpClient(Input, Output):
+class TcpClient:
     """A class implementing a TCP network client."""
 
     def __init__(self, host, port, default_package_size=1024, connect=True):
@@ -31,7 +31,7 @@ class TcpClient(Input, Output):
             If True, connect immediately (default=True).
 
         """
-        
+
         from ._tcpclient import TcpClient
         self.__class__ = TcpClient
         TcpClient.__init__(self, host, port, default_package_size, connect)
