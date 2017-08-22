@@ -20,7 +20,7 @@ from expyriment import _internals
 from expyriment.misc._timer import get_time
 from expyriment.misc._miscellaneous import byte2unicode, unicode2byte
 from expyriment.io._input_output import Input, Output
-from .tcpclient import TcpClient
+from ..tcpclient import TcpClient
 
 
 class TbvNetworkInterface(Input, Output):
