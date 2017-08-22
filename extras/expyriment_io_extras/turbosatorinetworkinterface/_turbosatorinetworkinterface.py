@@ -20,7 +20,7 @@ import struct
 from expyriment.misc._timer import get_time
 from expyriment.misc._miscellaneous import byte2unicode
 from expyriment.io._input_output import Input, Output
-from ._tcpclient import TcpClient
+from ..tcpclient import TcpClient
 
 
 class TurbosatoriNetworkInterface(Input, Output):
