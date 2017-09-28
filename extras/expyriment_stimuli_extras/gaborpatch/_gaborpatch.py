@@ -15,46 +15,47 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
-import os
-import tempfile
 from types import ModuleType
 
-from expyriment.stimuli._picture import Picture
-from expyriment import stimuli
+from expyriment.stimuli._canvas import Canvas
+from expyriment.misc import constants
 
 try:
     import numpy as np
 except:
     np = None
-try:
-    from matplotlib import pyplot
-except:
-    pyplot = None
 
-
-class GaborPatch(Picture):
+class GaborPatch(Canvas):
     """A class implementing a Gabor Patch."""
 
-    def __init__(self, size=300, position=None, lambda_=10, theta=15,
-                sigma=20, phase=.25, trim=.005):
+    def __init__(self, position=None,
+                 sigma=55,
+                 theta=35,
+                 lambda_=12.5,
+                 phase=0.5,
+                 psi=120,
+                 gamma=1,
+                 background_colour=constants.C_DARKGREY):
         """Create a Gabor Patch.
 
         Parameters
         ----------
-        size : (int, int), optional
-            size (x, y) of the mask (default=300)
         position  : (int, int), optional
             position of the mask stimulus
-        lambda_ : int, optional
-            Spatial frequency (pixel per cycle) (default=10)
-        theta : int or float, optional
-            Grating orientation in degrees (default=15)
         sigma : int or float, optional
             gaussian standard deviation (in pixels) (default=20)
+        theta : int or float, optional
+            Grating orientation in degrees (default=35)
+        lambda_ : int, optional
+            Spatial frequency (pixel per cycle) (default=10)
         phase : float
-            0 to 1 inclusive (default=.25)
-        trim : float
-            trim off Gaussian values smaller than this (default=.005)
+            0 to 1 inclusive (default=.5)
+        psi : int, optional
+            0 to 1 inclusive (default=1)
+        gamma : float
+            0 to 1 inclusive (default=1)
+        background_colour : (int,int,int), optional
+            colour of the background, default: misc.constants.C_DARKGREY
 
         Notes
         -----
@@ -64,56 +65,47 @@ class GaborPatch(Picture):
 
         """
 
-        # Parts of the code has be ported from http://www.icn.ucl.ac.uk/courses/MATLAB-Tutorials/Elliot_Freeman/html/gabor_tutorial.html
-
         if not isinstance(np, ModuleType):
             message = """GaborPatch can not be initialized.
 The Python package 'Numpy' is not installed."""
             raise ImportError(message)
 
-        if not isinstance(pyplot, ModuleType):
-            message = """GaborPatch can not be initialized.
-The Python package 'Matplotlib' is not installed."""
-            raise ImportError(message)
 
-        fid, filename = tempfile.mkstemp(
-                    dir=stimuli.defaults.tempdir,
-                    suffix=".png")
-        os.close(fid)
-        Picture.__init__(self, filename, position)
+        sigma_x = sigma
+        sigma_y = float(sigma) / gamma
 
-        # make linear ramp
-        X0 = (np.linspace(1, size, size) // size) - .5
-        # Set wavelength and phase
-        freq = size / float(lambda_)
-        phaseRad = phase * 2 * np.pi
-        # Make 2D grating
-        Xm, Ym = np.meshgrid(X0, X0)
-        # Change orientation by adding Xm and Ym together in different proportions
-        thetaRad = (theta / 360.) * 2 * np.pi
-        Xt = Xm * np.cos(thetaRad)
-        Yt = Ym * np.sin(thetaRad)
-        grating = np.sin(((Xt + Yt) * freq * 2 * np.pi) + phaseRad)
-        # 2D Gaussian distribution
-        gauss = np.exp(-((Xm ** 2) + (Ym ** 2)) / (2 * (sigma / float(size)) ** 2))
-        # Trim
-        gauss[gauss < trim] = 0
+        # Bounding box
+        nstds = 3
+        theta = theta / 180.0 * np.pi
+        xmax = max(abs(nstds * sigma_x * np.cos(theta)), abs(nstds * sigma_y * np.sin(theta)))
+        xmax = np.ceil(max(1, xmax))
+        ymax = max(abs(nstds * sigma_x * np.sin(theta)), abs(nstds * sigma_y * np.cos(theta)))
+        ymax = np.ceil(max(1, ymax))
+        xmin = -xmax
+        ymin = -ymax
+        (x, y) = np.meshgrid(np.arange(xmin, xmax + 1), np.arange(ymin, ymax + 1))
+        (y, x) = np.meshgrid(np.arange(ymin, ymax + 1), np.arange(xmin, xmax + 1))
 
-        self._pixel_array = grating * gauss
+        # Rotation
+        x_theta = x * np.cos(theta) + y * np.sin(theta)
+        y_theta = -x * np.sin(theta) + y * np.cos(theta)
 
-        #save stimulus
-        color_map = pyplot.get_cmap('gray')
-        color_map.set_over(color="y")
+        pattern = np.exp(-.5 * (x_theta ** 2 / sigma_x ** 2 + y_theta ** 2 / sigma_y ** 2)) * np.cos(
+            2 * np.pi / lambda_ * x_theta + psi)
 
-        pyplot.imsave(fname = filename,
-                    arr  = self._pixel_array,
-                    cmap = color_map, format="png")
+        # make numpy pixel array
+        bkg = np.ones((pattern.shape[0], pattern.shape[1], 3)) * \
+                                    (np.ones((pattern.shape[1], 3)) * background_colour) #background
+        modulation = np.ones((3, pattern.shape[1], pattern.shape[0])) * \
+                                    ((255/2.0) * phase * np.ones(pattern.shape) * pattern)  # alpha
 
-        # determine background color
-        norm = pyplot.normalize(vmin = np.min(self._pixel_array),
-                                vmax = np.max(self._pixel_array))
-        bgc = color_map(norm(0))
-        self._background_colour = [int(x*255) for x in bgc[:3]]
+        self._pixel_array = bkg + modulation.T
+        self._pixel_array[self._pixel_array<0] = 0
+        self._pixel_array[self._pixel_array>255] = 255
+
+        # make stimulus
+        Canvas.__init__(self, size=pattern.shape, position=position, colour=background_colour)
+        self._background_colour = background_colour
 
     @property
     def background_colour(self):
@@ -128,13 +120,23 @@ The Python package 'Matplotlib' is not installed."""
 
         return self._pixel_array
 
+    def _create_surface(self):
+        """Get the surface of the stimulus.
+
+        This method has to be overwritten for all subclasses individually!
+
+        """
+
+        self.set_surface(self._pixel_array)
+        return self._surface
+
 if __name__ == "__main__":
-    from .. import control, design, misc
+    from expyriment import control, design, misc
     control.set_develop_mode(True)
     control.defaults.event_logging = 0
-    garbor = GaborPatch(size=200, lambda_=10, theta=15,
-                sigma=20, phase=0.25)
-    exp = design.Experiment(background_colour=garbor.background_colour)
+    exp = design.Experiment(background_colour=misc.constants.C_DARKGREY)
+    garbor = GaborPatch(background_colour = exp.background_colour)
+
     control.initialize(exp)
     garbor.present()
     exp.clock.wait(1000)
