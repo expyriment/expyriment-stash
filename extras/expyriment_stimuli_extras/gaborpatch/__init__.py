@@ -16,7 +16,7 @@ __revision__ = ''
 __date__ = ''
 
 
-class GaborPatch(Canvas):
+class GaborPatch:
     """A class implementing a Gabor Patch."""
 
     def __init__(self, position=None,
