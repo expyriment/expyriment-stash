@@ -15,6 +15,7 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
+from expyriment.misc import constants
 
 class GaborPatch:
     """A class implementing a Gabor Patch."""
@@ -53,7 +54,7 @@ class GaborPatch:
         property `GaborPatch.background_colour`.
         """
 
-        from ._gaborpath import GaborPath
+        from ._gaborpatch import GaborPatch
         self.__class__ = GaborPatch
         GaborPatch.__init__(self, position=position,
                             sigma=sigma, theta=theta, lambda_=lambda_, 
