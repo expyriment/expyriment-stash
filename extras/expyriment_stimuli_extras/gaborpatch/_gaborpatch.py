@@ -1,4 +1,4 @@
-trim off Gaussian values smaller than this#!/usr/bin/env python
+#!/usr/bin/env python
 
 """
 A Gabor patch stimulus.
