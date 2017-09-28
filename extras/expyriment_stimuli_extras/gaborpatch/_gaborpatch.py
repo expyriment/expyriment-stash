@@ -35,7 +35,7 @@ class GaborPatch(Canvas):
                  phase=0.5,
                  psi=120,
                  gamma=1,
-                 background_colour=constants.C_DARKGREY):
+                 background_colour=(127, 127, 127)):
         """Create a Gabor Patch.
 
         Parameters
@@ -55,7 +55,7 @@ class GaborPatch(Canvas):
         gamma : float
             0 to 1 inclusive (default=1)
         background_colour : (int,int,int), optional
-            colour of the background, default: misc.constants.C_DARKGREY
+            colour of the background, default: (127, 127, 127)
 
         Notes
         -----
