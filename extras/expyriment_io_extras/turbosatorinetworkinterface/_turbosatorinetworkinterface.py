@@ -499,3 +499,64 @@ class TurbosatoriNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             return struct.unpack('!f', data[8:])[0], rt
+
+
+    def get_samplingrate(self):
+        """Get samplingrate.
+
+        Returns:
+        --------
+        samplingrate : float
+            The samplingrate.
+        rt : int
+            The time it took to get the data.
+
+        """
+
+        data, rt = self.request_data("tGetSamplingRate")
+        if data is None:
+            return None, rt
+        elif data[:14] == "Wrong request!":
+            raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
+        else:
+            return struct.unpack('!f', data)[0], rt
+
+    def get_number_of_classes(self):
+        """Get the number of SVM classes used in TSI.
+
+        Returns:
+        --------
+        data : int
+            The number of used classes in TSI.
+        rt : int
+            The time it took to get the data.
+
+        """
+
+        data, rt = self.request_data("tGetNumberOfClasses")
+        if data is None:
+            return None, rt
+        elif data[:14] == "Wrong request!":
+            raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
+        else:
+            return struct.unpack('!i', data)[0], rt
+
+    def get_current_classifier_output(self):
+        """Get the current classifier output from TSI.
+
+        Returns:
+        --------
+        data : float
+            The number of selected channels.
+        rt : int
+            The time it took to get the data.
+
+        """
+
+        data, rt = self.request_data("tGetCurrentClassifierOutput")
+        if data is None:
+            return None, rt
+        elif data[:14] == "Wrong request!":
+            raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
+        else:
+            return struct.unpack('!f', data)[0], rt
