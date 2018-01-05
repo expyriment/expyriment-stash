@@ -28,8 +28,8 @@ class TbvNetworkInterface(Input, Output):
 
     See http://www.brainvoyager.com/products/turbobrainvoyager.html
     for more information.
-
-     """
+    
+    """
 
     def __init__(self, host, port, timeout=2000, connect=True):
         """Create a TbvNetworkInterface.
@@ -209,7 +209,7 @@ class TbvNetworkInterface(Input, Output):
         Returns
         -------
         data : int
-            The current time point.
+            The current time point (1-based!).
         rt : int
             The time it took to get the data.
 
@@ -569,9 +569,9 @@ class TbvNetworkInterface(Input, Output):
         Returns
         -------
         mean : float
-            The mean of the ROI.
+            The mean of the ROI (0-based!).
         rt : int
-            The time it took to get the data.
+            The time it took to get the data (0-based!).
 
         """
 
