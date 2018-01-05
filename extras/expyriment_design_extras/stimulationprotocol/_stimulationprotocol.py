@@ -283,13 +283,13 @@ class StimulationProtocol:
         for idx, line in enumerate(data):
             if line.startswith(u"ResolutionOfTime:"):
                 if line.endswith(u"msec"):
-                    if self._conditions != [] and self._timing != u"msec":
+                    if self._conditions != [] and self._unit != u"time":
                         raise RuntimeError("Protocol contains data in other unit!")
-                    self._timing = "time"
+                    self._unit = "time"
                 else:
-                    if self._conditions !=[] and self._timing != u"volume":
+                    if self._conditions !=[] and self._unit != u"volume":
                         raise RuntimeError("Protocol contains data in other unit!")
-                    self._timing = u"volume"
+                    self._unit = u"volume"
             if line.startswith(u"NrOfConditions:"):
                 in_body = True
                 continue
@@ -390,3 +390,45 @@ class StimulationProtocol:
                         if block is None:
                             b.add_trial(t)
         return b
+    
+    def get_condition_at_time_point(self, time_point):
+        """Get the condition at a certain time point.
+        
+        Parameters
+        ----------
+        time_point : int
+            the time point to get the corresponding condition from
+            
+        Returns
+        -------
+        condition : dict
+            the condition the time point belongs to
+            
+        """
+        
+        for condition in self._conditions:
+            for event in condition['events']:
+                if time_point in range(event['begin'], event['end']+1):
+                    return condition
+        return None
+    
+    def get_event_at_time_point(self, time_point):
+        """Get the event at a certain time point.
+        
+        Parameters
+        ----------
+        time_point : int
+            the time point to get the corresponding event from
+            
+        Returns
+        -------
+        begin : dict
+            the event the time point belongs to
+            
+        """
+        
+        for condition in self._conditions:
+            for event in condition['events']:
+                if time_point in range(event['begin'], event['end']+1):
+                    return event
+        return None
