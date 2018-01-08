@@ -501,8 +501,8 @@ class TurbosatoriNetworkInterface(Input, Output):
             return struct.unpack('!f', data[8:])[0], rt
 
 
-    def get_samplingrate(self):
-        """Get samplingrate.
+    def get_sampling_rate(self):
+        """Get the sampling rate.
 
         Returns:
         --------
@@ -522,7 +522,7 @@ class TurbosatoriNetworkInterface(Input, Output):
             return struct.unpack('!f', data)[0], rt
 
     def get_number_of_classes(self):
-        """Get the number of SVM classes used in TSI.
+        """Get the number of SVM classes used.
 
         Returns:
         --------
@@ -542,7 +542,7 @@ class TurbosatoriNetworkInterface(Input, Output):
             return struct.unpack('!i', data)[0], rt
 
     def get_current_classifier_output(self):
-        """Get the current classifier output from TSI.
+        """Get the current classifier output.
 
         Returns:
         --------
