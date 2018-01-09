@@ -42,6 +42,6 @@ class VisualMask:
         """
 
         from ._visualmask import VisualMask
-        self.__class__ = VisuaMask
+        self.__class__ = VisualMask
         VisualMask.__init__(self, size, position, dot_size, background_colour,
                             dot_colour, dot_percentage, smoothing)
