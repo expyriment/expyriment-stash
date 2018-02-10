@@ -17,7 +17,7 @@ __revision__ = ''
 __date__ = ''
 
 
-class RandomDotKinematogram:
+class RandomDotKinematogram(object):
     """Random Dot Kinematogram"""
 
     def __init__(self, area_radius, n_dots, target_direction,
