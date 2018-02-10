@@ -16,7 +16,7 @@ __revision__ = ''
 __date__ = ''
 
 
-class VisualMask:
+class VisualMask(object):
     """A class implementing a visual mask stimulus."""
 
     def __init__(self, size, position=None, dot_size=(5,5),
