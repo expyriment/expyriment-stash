@@ -16,7 +16,7 @@ __revision__ = ''
 __date__ = ''
 
 
-class StimulusCloud:
+class StimulusCloud(object):
     """A stimulus cloud class.
 
     This class produces a cloud of ANY visual stimuli.
