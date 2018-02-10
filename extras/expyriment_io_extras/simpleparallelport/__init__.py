@@ -20,7 +20,7 @@ except:
     parallel = None
 
 
-class SimpleParallelPort:
+class SimpleParallelPort(object):
     """A class implementing a parallel port input and output.
 
     Notes
