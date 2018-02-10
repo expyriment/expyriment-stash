@@ -16,7 +16,7 @@ __revision__ = ''
 __date__ = ''
 
 
-class PolygonRectangle:
+class PolygonRectangle(object):
     """A class implementing a rectangle stimulus."""
 
     def __init__(self, size, position=None, colour=None, anti_aliasing=0):
