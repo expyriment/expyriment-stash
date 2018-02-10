@@ -15,7 +15,7 @@ __revision__ = ''
 __date__ = ''
 
 
-class TurbosatoriNetworkInterface:
+class TurbosatoriNetworkInterface(object):
     """A class implementing a network interface to Turbo-Satori.
 
     See http://www.brainvoyager.com/products/turbosatori.html
