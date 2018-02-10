@@ -17,7 +17,7 @@ __revision__ = ''
 __date__ = ''
 
 
-class PolygonLine:
+class PolygonLine(object):
     """A class implementing a line stimulus."""
 
     def __init__(self, start_position, end_position, line_width, colour=None,
