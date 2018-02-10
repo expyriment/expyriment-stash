@@ -13,7 +13,7 @@ __revision__ = ''
 __date__ = ''
 
 
-class TcpServer:
+class TcpServer(object):
     """A class implementing a TCP network server for a single client."""
 
     def __init__(self, port, default_package_size=1024, start_listening=True):
