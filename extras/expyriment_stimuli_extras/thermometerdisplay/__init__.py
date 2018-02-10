@@ -16,7 +16,7 @@ __revision__ = ''
 __date__ = ''
 
 
-class ThermometerDisplay:
+class ThermometerDisplay(object):
     """A class implementing a thermometer display."""
 
     def __init__(self, state, goal=None, size=(128,340), nr_segments=10,
