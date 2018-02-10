@@ -16,7 +16,7 @@ __revision__ = ''
 __date__ = ''
 
 
-class StimulusCircle:
+class StimulusCircle(object):
     """A stimulus circle class.
 
     """
