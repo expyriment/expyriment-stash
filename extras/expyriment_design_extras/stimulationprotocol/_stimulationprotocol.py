@@ -26,7 +26,7 @@ from expyriment.design import Block, Trial
 from expyriment.misc import unicode2byte, byte2unicode, create_colours
 
 
-class StimulationProtocol:
+class StimulationProtocol(object):
     """A class implementing a stimulation protocol."""
 
     def __init__(self, unit):
