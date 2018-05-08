@@ -214,7 +214,7 @@ class StimulationProtocol(object):
             if self._unit == 'time':
                 f.write(unicode2byte("ResolutionOfTime:   msec\n"))
             elif self._unit == 'volume':
-                f.write(unicode2byte("ResolutionOfTime:   Volume\n"))
+                f.write(unicode2byte("ResolutionOfTime:   Volumes\n"))
             f.write(unicode2byte("\n"))
             f.write(unicode2byte("Experiment:         {0}\n".format(exp_name)))
             f.write(unicode2byte("\n"))
