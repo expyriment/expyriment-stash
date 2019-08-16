@@ -1,3 +1,6 @@
+# TODO: Refactor "Wrong Request" exception into request_data
+# TODO: Check args of returned data
+
 """Turbo Brain Voyager network interface.
 
 This module contains a class implementing a network interface for Turbo Brain
