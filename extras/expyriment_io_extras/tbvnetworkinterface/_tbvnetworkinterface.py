@@ -1,4 +1,5 @@
 # TODO: Refactor "Wrong Request" exception into request_data
+# TODO: Data cannot be None after request_data
 # TODO: Check args of returned data
 
 """Turbo Brain Voyager network interface.
@@ -157,7 +158,7 @@ class TbvNetworkInterface(Input, Output):
         receive, rt = self._tcp.wait(package_size=8, duration=self.timeout,
                                      process_control_events=False)
         if receive is None:
-            raise RuntimeError("Waiting for requested TBV data timed out!")
+            return None
         length = struct.unpack('!q', receive)[0]
         data = None
         timeout = self.timeout - int((get_time() - start) * 1000)
@@ -166,7 +167,7 @@ class TbvNetworkInterface(Input, Output):
                                       duration=timeout,
                                       process_control_events=False)
         if data is None:
-            raise RuntimeError("Waiting for requested TBV data timed out!")
+            return None
                 
         return data[4:]
 
@@ -193,7 +194,7 @@ class TbvNetworkInterface(Input, Output):
         self._send(request, *args)
         data = self._wait()
         if data is None:
-            return None, None
+            raise RuntimeError("Waiting for requested TBV data timed out!")
         elif data[0:len(request)] != request:
             return data, None
         else:
