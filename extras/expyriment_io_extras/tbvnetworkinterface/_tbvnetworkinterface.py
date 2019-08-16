@@ -116,12 +116,7 @@ class TbvNetworkInterface(Input, Output):
     def timeout(self, value):
         """Setter for timeout."""
 
-        if self._is_connected:
-            raise AttributeError(
-                TbvNetworkInterface._getter_exception_message.format(
-                    "timeout"))
-        else:
-            self._timeout = value
+        self._timeout = value
 
     def connect(self):
         """Connect to the TBV server."""
@@ -155,17 +150,22 @@ class TbvNetworkInterface(Input, Output):
         self._tcp.send(data)
 
     def _wait(self):
+        start = get_time()
         receive, rt = self._tcp.wait(package_size=8, duration=self.timeout,
                                      process_control_events=False)
+        if receive is None:
+            raise RuntimeError("Waiting for requested TBV data timed out!")
+        length = struct.unpack('!q', receive)[0]
         data = None
-        if receive is not None:
-            length = struct.unpack('!q', receive)[0]
-            data, rt = self._tcp.wait(package_size=length, duration=self._timeout,
+        timeout = self.timeout - int((get_time() - start) * 1000)
+        if timeout > 0:
+            data, rt = self._tcp.wait(package_size=length,
+                                      duration=timeout,
                                       process_control_events=False)
-        if receive is None or data is None:
-            return None
-        else:
-            return data[4:]
+        if data is None:
+            raise RuntimeError("Waiting for requested TBV data timed out!")
+                
+        return data[4:]
 
     def request_data(self, request, *args):
         """Request data from Turbo Brain Voyager.
