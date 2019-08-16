@@ -225,13 +225,16 @@ class TcpServer(Input, Output):
     def clear(self):
         """Read the stream empty."""
 
-        try:
-            self._socket.recv(1024000000000)
-        except:
-            pass
+        cleared = ""
+        while True:
+            try:
+                cleared = cleared + self._socket.recv(1024)
+            except:
+                break
+                
         if self._logging:
             _internals.active_exp._event_file_log(
-                            "TcpServer,cleared,wait", 2)
+                            "TcpServer,cleared,{0}".format(len(cleared)), 2)
 
     def close(self):
         """Close the connection to the client."""
