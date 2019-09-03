@@ -212,7 +212,7 @@ class TbvNetworkInterface(Input, Output):
                 "Wrong request '{0}'!".format(data[19:-1]))
         elif data[0:len(request)+1+arg_length] != request+b"\x00"+arg:
             raise TbvNetworkInterface.DataError(
-                "Received data does not match request!)
+                "Received data does not match request!")
         else:
             return data[len(request) + 1:], int((get_time() - start) * 1000)
 
