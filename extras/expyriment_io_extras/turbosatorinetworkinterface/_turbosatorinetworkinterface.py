@@ -18,10 +18,10 @@ __date__ = ''
 import struct
 
 from expyriment.misc._timer import get_time
-from expyriment.misc._miscellaneous import byte2unicode
+from expyriment.misc._miscellaneous import byte2unicode, unicode2byte
 from expyriment.io._input_output import Input, Output
 from ..tcpclient import TcpClient
-
+from expyriment import _internals
 
 class TurbosatoriNetworkInterface(Input, Output):
     """A class implementing a network interface to Turbo-Satori.
@@ -31,6 +31,16 @@ class TurbosatoriNetworkInterface(Input, Output):
 
      """
 
+    
+    class TimeoutError(Exception):
+        pass
+
+    class RequestError(Exception):
+        pass
+
+    class DataError(Exception):
+        pass
+    
     def __init__(self, host, port, timeout=2000, connect=True):
         """Create a TurbosatoriNetworkInterface.
 
@@ -138,7 +148,7 @@ class TurbosatoriNetworkInterface(Input, Output):
                 raise RuntimeError("Requesting a socket failed!")
             self._is_connected = True
             if self._logging:
-                _globals.active_exp._event_file_log(
+                _internals.active_exp._event_file_log(
                     "TurbosatoriNetworkInterface,connected,{0}:{1}".format(
                         self._host, self._port))
 
@@ -149,20 +159,18 @@ class TurbosatoriNetworkInterface(Input, Output):
             for arg in args:
                 arg_length += len(arg)
         data = struct.pack('!q', length + 5 + arg_length) + \
-            "\x00\x00\x00{0}{1}\x00".format(chr(length + 1), message)
+            b"\x00\x00\x00" + unicode2byte(chr(length + 1)) + message + b"\x00"
         if len(args) > 0:
             for arg in args:
                 data += arg
         self._tcp.send(data)
 
     def _wait(self):
-        receive, rt = self._tcp.wait(package_size=8, duration=self.timeout,
-                                     check_control_keys=False)
+        receive, rt = self._tcp.wait(package_size=8, duration=self.timeout)
         data = None
         if receive is not None:
             length = struct.unpack('!q', receive)[0]
-            data, rt = self._tcp.wait(package_size=length, duration=self._timeout,
-                                      check_control_keys=False)
+            data, rt = self._tcp.wait(package_size=length, duration=self._timeout)
         if receive is None or data is None:
             return None
         else:
@@ -187,12 +195,20 @@ class TurbosatoriNetworkInterface(Input, Output):
 
         start = get_time()
         self._tcp.clear()
+        request = unicode2byte(request)
         self._send(request, *args)
         data = self._wait()
+        arg_length = sum([len(x) for x in args])
+        arg = b"".join(args)
         if data is None:
-            return None, None
-        elif data[0:len(request)] != request:
-            return data, None
+            raise TurbosatoriNetworkInterface.TimeoutError(
+                "Waiting for requested data timed out!")
+        elif byte2unicode(data).startswith("Wrong request!"):
+            raise TurbosatoriNetworkInterface.RequestError(
+                "Wrong request '{0}'!".format(data[19:-1]))
+        elif data[0:len(request)+1+arg_length] != request+b"\x00"+arg:
+            raise TurbosatoriNetworkInterface.DataError(
+                "Received data does not match request!")
         else:
             return data[len(request) + 1:], int((get_time() - start) * 1000)
 
