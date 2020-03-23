@@ -21,7 +21,7 @@ from expyriment.misc._timer import get_time
 from expyriment.misc._miscellaneous import byte2unicode, unicode2byte
 from expyriment.io._input_output import Input, Output
 from ..tcpclient import TcpClient
-
+from expyriment import _internals
 
 class TurbosatoriNetworkInterface(Input, Output):
     """A class implementing a network interface to Turbo-Satori.
@@ -148,7 +148,7 @@ class TurbosatoriNetworkInterface(Input, Output):
                 raise RuntimeError("Requesting a socket failed!")
             self._is_connected = True
             if self._logging:
-                _globals.active_exp._event_file_log(
+                _internals.active_exp._event_file_log(
                     "TurbosatoriNetworkInterface,connected,{0}:{1}".format(
                         self._host, self._port))
 
@@ -166,13 +166,11 @@ class TurbosatoriNetworkInterface(Input, Output):
         self._tcp.send(data)
 
     def _wait(self):
-        receive, rt = self._tcp.wait(package_size=8, duration=self.timeout,
-                                     check_control_keys=False)
+        receive, rt = self._tcp.wait(package_size=8, duration=self.timeout)
         data = None
         if receive is not None:
             length = struct.unpack('!q', receive)[0]
-            data, rt = self._tcp.wait(package_size=length, duration=self._timeout,
-                                      check_control_keys=False)
+            data, rt = self._tcp.wait(package_size=length, duration=self._timeout)
         if receive is None or data is None:
             return None
         else:
