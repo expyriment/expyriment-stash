@@ -31,6 +31,16 @@ class TurbosatoriNetworkInterface(Input, Output):
 
      """
 
+    
+    class TimeoutError(Exception):
+        pass
+
+    class RequestError(Exception):
+        pass
+
+    class DataError(Exception):
+        pass
+    
     def __init__(self, host, port, timeout=2000, connect=True):
         """Create a TurbosatoriNetworkInterface.
 
