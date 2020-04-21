@@ -16,6 +16,8 @@ __date__ = ''
 
 
 import struct
+import array as arr
+import sys
 
 from expyriment.misc._timer import get_time
 from expyriment.misc._miscellaneous import byte2unicode, unicode2byte
@@ -200,6 +202,7 @@ class TurbosatoriNetworkInterface(Input, Output):
         data = self._wait()
         arg_length = sum([len(x) for x in args])
         arg = b"".join(args)
+
         if data is None:
             raise TurbosatoriNetworkInterface.TimeoutError(
                 "Waiting for requested data timed out!")
@@ -576,3 +579,163 @@ class TurbosatoriNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             return struct.unpack('!f', data)[0], rt
+
+    def get_full_nr_of_predictors(self):
+        """Provides the number of predictors of the design matrix.
+
+        Returns:
+        --------
+        data : int
+            The number of predictors used in the design matrix
+        rt : int
+            The time it took to get the data.
+
+        """
+
+        data, rt = self.request_data("tGetFullNrOfPredictors")
+        if data is None:
+            return None, rt
+        elif data[:14] == "Wrong request!":
+            raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
+        else:
+            return struct.unpack('!i', data)[0], rt
+
+    def get_value_of_design_matrix(self, predictor, frame, chromophore):
+        """Provides the value of a predictor at a given time point of the current design matrix. 
+        Note that the design matrix always contains the “full” set of predictors,
+        a reduced set of predictors is only used internally
+        (predictors that are not used internally are those containing only “0.0” entries up to the current time point).
+        Note that the “timepoint” parameter must be smaller than the value returned by the “tGetCurrentTimePoint()” function.
+        For details, see the provided example plugins.
+
+        Parameters:
+        ----------
+        predictor : int
+            The predictor of interest.
+        frame : int
+            The time point.
+        chromophore : int
+            The chromophore of interest
+
+        Returns:
+        --------
+        data : float
+            The value of the predictor at frame and using chromophore.
+        rt : int
+            The time it took to get the data.
+
+        """
+
+        predictor = struct.pack('!i', predictor)
+        frame = struct.pack('!i', frame)
+        chromophore = struct.pack('!i', chromophore)
+        data, rt = self.request_data("tGetValueOfDesignMatrix", predictor, frame, chromophore)
+        if data is None:
+            return None, rt
+        elif data[:14] == "Wrong request!":
+            raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
+        else:
+            return struct.unpack('!f', data[8:])[0], rt
+
+    def get_beta_of_channel(self, channel, beta, chromophore):
+        """Provides the signal value as a 4-byte float value of the channel specified by the parameter “ch”
+        for the given time point (0-based indices). The given “timepoint” parameter must be smaller than the
+        value obtained by the “tGetCurrentTimePoint()” function.
+
+        Parameters:
+        ----------
+        channel : int
+            The predictor of interest.
+        beta : int
+            The time point.
+        chromophore : int
+            The chromophore of interest
+
+        Returns:
+        --------
+        data : float
+            The beta value of the predictor and channel and chromophore.
+        rt : int
+            The time it took to get the data.
+
+        """
+
+        channel = struct.pack('!i', channel)
+        beta = struct.pack('!i', beta)
+        chromophore = struct.pack('!i', chromophore)
+        data, rt = self.request_data("tGetBetaOfChannel", channel, beta, chromophore)
+        if data is None:
+            return None, rt
+        elif data[:14] == "Wrong request!":
+            raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
+        else:
+            return struct.unpack('!f', data[8:])[0], rt
+
+    def get_tvalue_of_channel(self, channel, chromophore, contrast):
+        """Provides the signal value as a 4-byte float value of the channel specified by the parameter “ch” 
+        for the given time point (0-based indices). The given “timepoint” parameter must be smaller than the 
+        value obtained by the “tGetCurrentTimePoint()” function.
+
+
+        Parameters:
+        ----------
+        channel : int
+            The predictor of interest.
+        chromophore : int
+            The chromophore of interest
+        contrast : list of integers
+            The contrast used for the tvalue calculation. Only predictors of interest are possible to set. 
+
+        Returns:
+        --------
+        data : float
+            The t value of the predictor and channel and chromophore.
+        rt : int
+            The time it took to get the data.
+
+        """
+
+        sizecontrast = struct.pack('!i', len(contrast))
+        contrast = arr.array('i', contrast)
+        
+        channel = struct.pack('!i', channel)
+        chromophore = struct.pack('!i', chromophore)
+        contrast = contrast.tobytes()
+        data, rt = self.request_data("tGettValueOfChannel", channel, chromophore, sizecontrast, contrast)
+
+        if data is None:
+            return None, rt
+        elif data[:14] == "Wrong request!":
+            raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
+        else:
+            return struct.unpack('!f', data[12+len(contrast):])[0], rt
+
+    def get_protocol_condition(self, frame):
+        """Provides the index of the currently “active” condition of the protocol (0-based), 
+        i.e. the condition that has a defined interval enclosing the defined time point. 
+
+        Parameters:
+        ----------
+        frame : int
+            The time point.
+
+        Returns:
+        --------
+        data : int
+            The number of predictors used in the design matrix
+        rt : int
+            The time it took to get the data.
+
+        """
+
+        frame = struct.pack('!i', frame)
+        data, rt = self.request_data("tGetProtocolCondition", frame)
+
+        if data is None:
+            return None, rt
+        elif data[:14] == "Wrong request!":
+            raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
+        else:
+            return struct.unpack('!i', data[4:])[0], rt
+
+
