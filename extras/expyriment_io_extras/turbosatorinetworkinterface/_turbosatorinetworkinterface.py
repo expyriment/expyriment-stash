@@ -638,9 +638,8 @@ class TurbosatoriNetworkInterface(Input, Output):
             return struct.unpack('!f', data[8:])[0], rt
 
     def get_beta_of_channel(self, channel, beta, chromophore):
-        """Provides the signal value as a 4-byte float value of the channel specified by the parameter “ch”
-        for the given time point (0-based indices). The given “timepoint” parameter must be smaller than the
-        value obtained by the “tGetCurrentTimePoint()” function.
+        """Provides the beta value as a 4-byte float value of the channel specified by the parameter “channel”
+        for the predictor “beta” (0-based indices). The given “chromophore” parameter is jused to define the chromophore of interest (Oxy/DeOxy:0/1).
 
         Parameters:
         ----------
@@ -672,9 +671,8 @@ class TurbosatoriNetworkInterface(Input, Output):
             return struct.unpack('!f', data[8:])[0], rt
 
     def get_tvalue_of_channel(self, channel, chromophore, contrast):
-        """Provides the signal value as a 4-byte float value of the channel specified by the parameter “ch” 
-        for the given time point (0-based indices). The given “timepoint” parameter must be smaller than the 
-        value obtained by the “tGetCurrentTimePoint()” function.
+        """Provides the t-value as a 4-byte float value of the channel specified by the parameter “channel”
+        for the contrast “contrast” (0-based indices). The given “chromophore” parameter is jused to define the chromophore of interest (Oxy/DeOxy:0/1).
 
 
         Parameters:
