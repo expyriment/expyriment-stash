@@ -611,7 +611,7 @@ class TurbosatoriNetworkInterface(Input, Output):
         Parameters:
         ----------
         predictor : int
-            The predictor of interest.
+            The predictor of interest (0 based).
         frame : int
             The time point.
         chromophore : int
@@ -635,20 +635,20 @@ class TurbosatoriNetworkInterface(Input, Output):
         elif data[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
-            return struct.unpack('!f', data[8:])[0], rt
+            return struct.unpack('!f', data[12:])[0], rt
 
     def get_beta_of_channel(self, channel, beta, chromophore):
         """Provides the beta value as a 4-byte float value of the channel specified by the parameter “channel”
-        for the predictor “beta” (0-based indices). The given “chromophore” parameter is jused to define the chromophore of interest (Oxy/DeOxy:0/1).
+        for the predictor “beta” (0-based indices). The given “chromophore” parameter is jused to define the chromophore of interest (Oxy/DeOxy:1/0).
 
         Parameters:
         ----------
         channel : int
-            The predictor of interest.
+            The channel of interest (0 based).
         beta : int
-            The time point.
+            The predictor of interest (0 based).
         chromophore : int
-            The chromophore of interest
+            The chromophore of interest (1 = Oxy, 0 = DeOxy)
 
         Returns:
         --------
@@ -660,25 +660,27 @@ class TurbosatoriNetworkInterface(Input, Output):
         """
 
         channel = struct.pack('!i', channel)
+        
         beta = struct.pack('!i', beta)
         chromophore = struct.pack('!i', chromophore)
         data, rt = self.request_data("tGetBetaOfChannel", channel, beta, chromophore)
+       
         if data is None:
             return None, rt
         elif data[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
-            return struct.unpack('!f', data[8:])[0], rt
+            return struct.unpack('!f', data[12:])[0], rt
 
     def get_tvalue_of_channel(self, channel, chromophore, contrast):
         """Provides the t-value as a 4-byte float value of the channel specified by the parameter “channel”
-        for the contrast “contrast” (0-based indices). The given “chromophore” parameter is jused to define the chromophore of interest (Oxy/DeOxy:0/1).
+        for the contrast “contrast” (0-based indices). The given “chromophore” parameter is used to define the chromophore of interest (Oxy/DeOxy:1/0).
 
 
         Parameters:
         ----------
         channel : int
-            The predictor of interest.
+            The channel of interest.
         chromophore : int
             The chromophore of interest
         contrast : list of integers
@@ -735,5 +737,4 @@ class TurbosatoriNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             return struct.unpack('!i', data[4:])[0], rt
-
 
