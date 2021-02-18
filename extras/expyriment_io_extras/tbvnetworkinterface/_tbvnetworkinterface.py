@@ -3,6 +3,8 @@
 This module contains a class implementing a network interface for Turbo Brain
 Voyager (see www.brainvoyager.com/products/turbobrainvoyager.html).
 
+Compatible with version 2.4 of the TBV Network Plugin - Server. 
+
 """
 from __future__ import absolute_import, print_function, division
 from builtins import *
@@ -28,7 +30,7 @@ class TbvNetworkInterface(Input, Output):
 
     See http://www.brainvoyager.com/products/turbobrainvoyager.html
     for more information.
-    
+
     """
 
     class TimeoutError(Exception):
@@ -170,7 +172,7 @@ class TbvNetworkInterface(Input, Output):
                                       process_control_events=False)
         if data is None:
             return None
-                
+
         return data[4:]
 
     def request_data(self, request, *args):
@@ -182,7 +184,7 @@ class TbvNetworkInterface(Input, Output):
         raised.
         If the received data does not match the request, a
         `TbvNetworkInterface.DataError` is raised.
-        
+
         Parameters
         ----------
         request : str
@@ -338,7 +340,8 @@ class TbvNetworkInterface(Input, Output):
         Returns
         -------
         condition_nr : int
-            The current protocol condition.
+            The current protocol condition. The order of the condition is
+            based on the protocol (prt) file.
         rt : int
             The time it took to get the data.
 
@@ -353,7 +356,8 @@ class TbvNetworkInterface(Input, Output):
         Returns
         -------
         nr_predictors : int
-            The number of predictors.
+            The full number of predictors used in the GLM including confound
+            predictors.
         rt : int
             The time it took to get the data.
 
@@ -368,7 +372,7 @@ class TbvNetworkInterface(Input, Output):
         Returns
         -------
         nr_predictors : int
-            The number of predictors.
+            The currently available number of predictors.
         rt : int
             The time it took to get the data.
 
@@ -383,7 +387,7 @@ class TbvNetworkInterface(Input, Output):
         Returns
         -------
         nr_predictors : int
-            The number of predictors.
+            The number of confound predictors.
         rt : int
             The time it took to get the data.
 
@@ -469,6 +473,101 @@ class TbvNetworkInterface(Input, Output):
         data, rt = self.request_data(
             "tGetMeanOfROI", roi)
         return struct.unpack('!f', data[4:])[0], rt
+
+    def get_detrended_value_of_roi(self, roi):
+        """Get the detrended mean of a ROI.
+
+        Parameters
+        ----------
+        roi : int
+            The ROI.
+
+        Returns
+        -------
+        mean : float
+            The detrended mean of the ROI.
+        rt : int
+            The time it took to get the data.
+
+        """
+
+        roi = struct.pack('!i', roi)
+        data, rt = self.request_data(
+            "tGetDetrendedValueOfROI", roi)
+        if data is None:
+            return None, rt
+        elif data[:14] == "Wrong request!":
+            raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
+        else:
+            return struct.unpack('!f', data[4:])[0], rt
+
+    def get_existing_detrended_means_of_roi(self, roi, to_time_point):
+        """Get the existing detrended means of a ROI.
+
+        Important: If the ROI is changed during the run the detrended data is
+        not updated for previous timepoints.
+
+        Parameters
+        ----------
+        roi : int
+            The ROI.
+        to_time_point : int
+            Get all the means up to this point.
+
+        Returns
+        -------
+        means : list
+            The detrended means of the ROI.
+        rt : int
+            The time it took to get the data.
+
+        """
+
+        roi = struct.pack('!i', roi)
+        to_time_point = struct.pack('!i', to_time_point)
+        data, rt = self.request_data(
+            "tGetExistingDetrendedMeansOfROI", roi, to_time_point)
+        if data is None:
+            return None, rt
+        elif data[:14] == "Wrong request!":
+            raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
+        else:
+            return ([struct.unpack('!f', data[8 + x * 4:8 + x * 4 + 4])[0]
+                     for x in range(0, len(data[8:]) // 4)], rt)
+
+    def get_detrended_mean_of_roi_at_time_point(self, roi, time_point):
+        """Get the mean of a ROI at a time point.
+
+        Important: If the ROI is changed during the run the detrended data is
+        not updated for previous timepoints.
+
+        Parameters
+        ----------
+        roi : int
+            The ROI.
+        time_point : int
+            The time point.
+
+        Returns
+        -------
+        mean : float
+            The detrended mean of the ROI.
+        rt : int
+            The time it took to get the data.
+
+        """
+
+        roi = struct.pack('!i', roi)
+        time_point = struct.pack('!i', time_point)
+        data, rt = self.request_data(
+            "tGetDetrendedMeanOfROIAtTimePoint", roi, time_point)
+
+        if data is None:
+            return None, rt
+        elif data[:14] == "Wrong request!":
+            raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
+        else:
+            return struct.unpack('!f', data[8:])[0], rt
 
     def get_existing_means_of_roi(self, roi, to_time_point):
         """Get the existing means of a ROI.
@@ -597,7 +696,7 @@ class TbvNetworkInterface(Input, Output):
                  struct.unpack('!i', data[16:])[0]], rt)
 
     def get_all_coords_of_voxels_of_roi(self, roi):  # TODO: Put into lists?
-        """Get coordinates for all voxels for a ROI.
+        """Get coordinates for all voxels of a ROI.
 
         Parameters
         ----------
@@ -728,7 +827,13 @@ class TbvNetworkInterface(Input, Output):
         z = struct.pack('!i', coords[2])
         data, rt = self.request_data(
             "tGetBetaOfVoxel", beta, x, y, z)
-        return struct.unpack('!d', data[16:])[0], rt
+
+        if data is None:
+            return None, rt
+        elif data[:14] == "Wrong request!":
+            raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
+        else:
+            return struct.unpack('!f', data[16:])[0], rt
 
     def get_beta_maps(self):
         """Get the beta maps.
@@ -737,7 +842,8 @@ class TbvNetworkInterface(Input, Output):
         -------
         beta_maps : list
             The data of all raw voxel values.
-                [x1_y1_z_p1, ..., xn_y1_y1_p1, ..., xn_yn_z1_p1, ..., xn_yn_zn_p1, ..., xn_yn_zn_pn]
+                [x1_y1_z_p1, ..., xn_y1_y1_p1, ..., xn_yn_z1_p1, ...,
+                xn_yn_zn_p1, ..., xn_yn_zn_pn]
             A beta value of a single predictor can be accessed at:
                 beta_i*dim_xyz + z_coord*dim_xy + y_coord*dim_x + x_coord
         rt : int
@@ -785,7 +891,8 @@ class TbvNetworkInterface(Input, Output):
         -------
         contrast_maps : list
             The data of all contrast maps values.
-                [x1_y1_z_c1, ..., xn_y1_y1_c1, ..., xn_yn_z1_c1, ..., xn_yn_zn_cn]
+                [x1_y1_z_c1, ..., xn_y1_y1_c1, ..., xn_yn_z1_c1, ...,
+                xn_yn_zn_cn]
             A t value of a specific contrast map of a voxel with specific
             coordinates can be accessed at:
                 map_i*dim_xyz + z_coord*dim_xy + y_coord*dim_x + x_coord
@@ -801,7 +908,7 @@ class TbvNetworkInterface(Input, Output):
 
     # SVM Access
     def get_number_of_classes(self):
-        """Get the number of classes.
+        """Get the number of classes used in the classifier.
 
         Returns
         -------
@@ -835,12 +942,12 @@ class TbvNetworkInterface(Input, Output):
 
     # Functional Connectivity
     def get_pearson_correlation(self, window_size):  # TODO: Needs testing!
-        """Get Pearson correlation at current time point.
+        """Get Pearson correlation.
 
         Parameters
         ----------
         window_size : int
-            The size of the window in volumes.
+            The size of the window for the calculation in volumes.
 
         Returns
         -------
@@ -858,13 +965,42 @@ class TbvNetworkInterface(Input, Output):
         return ([struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
                  for x in range(1, len(data) // 4)], rt)
 
-    def get_pearson_correlation_at_time_point(self, window_size, time_point):  # TODO: Needs testing!
-        """Get Pearson correlation at specified time point.
+    def get_detrended_pearson_correlation(self, window_size):  # TODO: Needs testing!
+        """Get detrended Pearson correlation.
 
         Parameters
         ----------
         window_size : int
-            The size of the window in volumes.
+            The size of the window for the calculation in volumes.
+
+        Returns
+        -------
+        correlations : list
+            The list of correlations between pairs of ROIs
+            [(x, y) for x in rois for y in rois if x < y].
+        rt : int
+            The time it took to get the data.
+
+        """
+
+        window_size = struct.pack('!i', window_size)
+        data, rt = self.request_data(
+            "tGetDetrendedPearsonCorrelation", window_size)
+        if data is None:
+            return None, rt
+        elif data[:14] == "Wrong request!":
+            raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
+        else:
+            return ([struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
+                     for x in range(1, len(data) // 4)], rt)
+
+    def get_pearson_correlation_at_time_point(self, window_size, time_point):  # TODO: Needs testing!
+        """Get Pearson correlation at a certain time point.
+
+        Parameters
+        ----------
+        window_size : int
+            The size of the window for the calculation in volumes.
         time_point : int
             The time point.
 
@@ -885,13 +1021,47 @@ class TbvNetworkInterface(Input, Output):
         return ([struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
                  for x in range(2, len(data) // 4)], rt)
 
-    def get_partial_correlation(self, window_size):  # TODO: Needs testing!
-        """Get partial correlation at current time point.
+    def get_detrended_pearson_correlation_at_time_point(self, window_size,
+                                                        time_point):  # TODO: Needs testing!
+        """Get detrended Pearson correlation at a certain time point.
 
         Parameters
         ----------
         window_size : int
-            The size of the window in volumes.
+            The size of the window for the calculation in volumes.
+        time_point : int
+            The time point.
+
+        Returns
+        -------
+        correlations : list
+            The list of correlations between pairs of ROIs
+            [(x, y) for x in rois for y in rois if x < y].
+        rt : int
+            The time it took to get the data.
+
+        """
+
+        window_size = struct.pack('!i', window_size)
+        time_point = struct.pack('!i', time_point)
+        data, rt = self.request_data(
+            "tGetDetrendedPearsonCorrelationAtTimePoint", window_size,
+            time_point)
+        if data is None:
+            return None, rt
+        elif data[:14] == "Wrong request!":
+            raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
+        else:
+            return ([struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
+                     for x in range(2, len(data) // 4)], rt)
+
+    def get_partial_correlation(self, window_size):  # TODO: Needs testing!
+        """Get partial correlation.
+
+        Parameters
+        ----------
+        window_size : int
+            The size of the window for the calculation in volumes.
 
         Returns
         -------
@@ -910,8 +1080,201 @@ class TbvNetworkInterface(Input, Output):
         return ([struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
                  for x in range(1, len(data) // 4)], rt)
 
+    def get_detrended_partial_correlation(self, window_size):  # TODO: Needs testing!
+        """Get detrended partial correlation.
+
+        Parameters
+        ----------
+        window_size : int
+            The size of the window for the calculation in volumes.
+
+        Returns
+        -------
+        correlations : list
+            The list of correlations between pairs of ROIs
+            [(x, y) for x in rois for y in rois if x < y]
+            while controlling for effects of combination of remaining ROIs.
+        rt : int
+            The time it took to get the data.
+
+        """
+
+        window_size = struct.pack('!i', window_size)
+        data, rt = self.request_data(
+            "tGetDetrendedPartialCorrelation", window_size)
+        if data is None:
+            return None, rt
+        elif data[:14] == "Wrong request!":
+            raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
+        else:
+            return ([struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
+                     for x in range(1, len(data) // 4)], rt)
+
     def get_partial_correlation_at_time_point(self, window_size, time_point):  # TODO: Needs testing!
-        """Get partial correlation at specified time point.
+        """Get partial correlation at a certain time point.
+
+        Parameters
+        ----------
+        window_size : int
+            The size of the window for the calculation in volumes.
+        time_point : int
+            The time point.
+
+        Returns
+        -------
+        correlations : list
+            The list of correlations between pairs of ROIs
+            [(x, y) for x in rois for y in rois if x < y]
+            while controlling for effects of combination of remaining ROIs.
+        rt : int
+            The time it took to get the data.
+
+        """
+
+        window_size = struct.pack('!i', window_size)
+        time_point = struct.pack('!i', time_point)
+        data, rt = self.request_data(
+            "tGetPartialCorrelationAtTimePoint", window_size, time_point)
+
+        if data is None:
+            return None, rt
+        elif data[:14] == "Wrong request!":
+            raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
+        else:
+            return ([struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
+                     for x in range(2, len(data) // 4)], rt)
+
+    def get_detrended_partial_correlation_at_time_point(self, window_size,
+                                                        time_point):  # TODO: Needs testing!
+        """Get detrended partial correlation at a certain time point.
+
+        Parameters
+        ----------
+        window_size : int
+            The size of the window for the calculation in volumes.
+        time_point : int
+            The time point.
+
+        Returns
+        -------
+        correlations : list
+            The list of correlations between pairs of ROIs
+            [(x, y) for x in rois for y in rois if x < y]
+            while controlling for effects of combination of remaining ROIs.
+        rt : int
+            The time it took to get the data.
+
+        """
+
+        window_size = struct.pack('!i', window_size)
+        time_point = struct.pack('!i', time_point)
+        data, rt = self.request_data(
+            "tGetDetrendedPartialCorrelationAtTimePoint", window_size,
+            time_point)
+        if data is None:
+            return None, rt
+        elif data[:14] == "Wrong request!":
+            raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
+        else:
+            return ([struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
+                     for x in range(2, len(data) // 4)], rt)
+
+    def get_instant_proxy_correlation(self, window_size):  # TODO: Needs testing!
+        """Get instant proxy correlation.
+
+        Parameters
+        ----------
+        window_size : int
+            The size of the window for the calculation in volumes.
+
+        Returns
+        -------
+        correlations : list
+            The list of correlations between pairs of ROIs
+            [(x, y) for x in rois for y in rois if x < y].
+        rt : int
+            The time it took to get the data.
+
+        """
+
+        window_size = struct.pack('!i', window_size)
+        data, rt = self.request_data(
+            "tGetInstantProxyCorrelation", window_size)
+        if data is None:
+            return None, rt
+        elif data[:14] == "Wrong request!":
+            raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
+        else:
+            return ([struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
+                     for x in range(1, len(data) // 4)], rt)
+
+    def get_detrended_instant_proxy_correlation(self, window_size):  # TODO: Needs testing!
+        """Get detrended instant proxy correlation.
+
+        Parameters
+        ----------
+        window_size : int
+            The size of the window for the calculation in volumes.
+
+        Returns
+        -------
+        correlations : list
+            The list of correlations between pairs of ROIs
+            [(x, y) for x in rois for y in rois if x < y].
+        rt : int
+            The time it took to get the data.
+
+        """
+
+        window_size = struct.pack('!i', window_size)
+        data, rt = self.request_data(
+            "tGetDetrendedInstantProxyCorrelation", window_size)
+        if data is None:
+            return None, rt
+        elif data[:14] == "Wrong request!":
+            raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
+        else:
+            return ([struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
+                     for x in range(1, len(data) // 4)], rt)
+
+    def get_instant_proxy_correlation_at_time_point(self, window_size,
+                                                    time_point):  # TODO: Needs testing!
+        """Get instant proxy correlation at a certain time point.
+
+        Parameters
+        ----------
+        window_size : int
+            The size of the window for the calculation in volumes.
+        time_point : int
+            The time point.
+
+        Returns
+        -------
+        correlations : list
+            The list of correlations between pairs of ROIs
+            [(x, y) for x in rois for y in rois if x < y]
+            while controlling for effects of combination of remaining ROIs.
+        rt : int
+            The time it took to get the data.
+
+        """
+
+        window_size = struct.pack('!i', window_size)
+        time_point = struct.pack('!i', time_point)
+        data, rt = self.request_data(
+            "tGetInstantProxyCorrelationAtTimePoint", window_size, time_point)
+        if data is None:
+            return None, rt
+        elif data[:14] == "Wrong request!":
+            raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
+        else:
+            return ([struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
+                     for x in range(2, len(data) // 4)], rt)
+
+    def get_detrended_instant_proxy_correlation_at_time_point(self,
+                                                              window_size,
+                                                              time_point):  # TODO: Needs testing!
+        """Get detrended instant proxy correlation at a certain time point.
 
         Parameters
         ----------
@@ -934,6 +1297,14 @@ class TbvNetworkInterface(Input, Output):
         window_size = struct.pack('!i', window_size)
         time_point = struct.pack('!i', time_point)
         data, rt = self.request_data(
-            "tGetPartialCorrelationAtTimePoint", window_size, time_point)
-        return ([struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
-                 for x in range(2, len(data) // 4)], rt)
+            "tGetDetrendedInstantProxyCorrelationAtTimePoint", window_size,
+            time_point)
+        if data is None:
+            return None, rt
+        elif data[:14] == "Wrong request!":
+            raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
+        else:
+            return ([struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
+                     for x in range(2, len(data) // 4)], rt)
+
+
