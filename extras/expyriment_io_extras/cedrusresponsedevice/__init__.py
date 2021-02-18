@@ -19,7 +19,7 @@ except:
     _pyxid = None
 
 
-class CedrusResponseDevice:
+class CedrusResponseDevice(object):
     """A class implementing a Cedrus XID response device.
 
     Notes

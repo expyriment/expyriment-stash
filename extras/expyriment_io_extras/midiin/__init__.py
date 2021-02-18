@@ -21,7 +21,7 @@ except:
     _midi = None
 
 
-class MidiIn:
+class MidiIn(object):
     """A class implementing a MIDI input.
 
     **EXPERIMENTAL!**

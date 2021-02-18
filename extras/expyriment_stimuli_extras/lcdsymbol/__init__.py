@@ -17,7 +17,7 @@ __revision__ = ''
 __date__ = ''
 
 
-class LcdSymbol:
+class LcdSymbol(object):
     """A LCD symbol class.
 
     IDs for points and line ::

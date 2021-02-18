@@ -14,7 +14,7 @@ __revision__ = ''
 __date__ = ''
 
 
-class TbvNetworkInterface:
+class TbvNetworkInterface(object):
     """A class implementing a network interface to Turbo-BrainVoyager.
 
     See http://www.brainvoyager.com/products/turbobrainvoyager.html

@@ -17,7 +17,7 @@ __revision__ = ''
 __date__ = ''
 
 
-class PolygonDot:
+class PolygonDot(object):
     """A class implementing a dot as a child of PolygonEllipse."""
 
     def __init__(self, radius, position=None, colour=None,

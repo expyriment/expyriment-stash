@@ -17,7 +17,7 @@ __revision__ = ''
 __date__ = ''
 
 
-class DotCloud:
+class DotCloud(object):
     """A dot cloud class.
 
     This class creates dots arranged in a circular cloud.

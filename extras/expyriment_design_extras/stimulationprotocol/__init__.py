@@ -16,7 +16,7 @@ __revision__ = ''
 __date__ = ''
 
 
-class StimulationProtocol:
+class StimulationProtocol(object):
     """A class implementing a stimulation protocol."""
 
     def __init__(self, unit):

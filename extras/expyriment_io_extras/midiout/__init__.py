@@ -20,7 +20,7 @@ except:
     _midi = None
 
 
-class MidiOut:
+class MidiOut(object):
     """A class implementing a MIDI output.
 
     **EXPERIMENTAL!**
