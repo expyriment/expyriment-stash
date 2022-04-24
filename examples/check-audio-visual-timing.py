@@ -1,89 +1,126 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
-# Time-stamp: <2019-02-09 09:52:16 christophe@pallier.org>
+# Time-stamp: <2021-11-16 13:23:44 christophe@pallier.org>
 
-''' Display two white squares in alternance and play sounds simultanously, 
-to check timing with external equipment (oscilloscope, BlackBox ToolKit, ...) '''
+''' Display a white square for 100ms and play a 100ms tone simultanously, every half second
+in order to check timing with external equipment (oscilloscope, BlackBox ToolKit, ...) '''
 
-import expyriment
+from numpy import round
+from expyriment import design, control, stimuli, misc
 
-TONE_DURATION = 100
-SQUARE_DURATION = 20 * (1000.0 / 60) - 2  # Twenty video refresh periods at 60Hz
-SOA = 1000  
+nTrials = 1000
+frameRate = 1/60  # this is an assumption to check! See below
+blankDuration = (frameRate * 18) * 1000
+stimDuration = (frameRate * 12) * 1000
+toneDuration = 100
 
 
-exp = expyriment.design.Experiment(name="Cross-modal-timing-test")
-# expyriment.control.set_develop_mode(True)  # commented because we need fullscreen
 
-expyriment.control.initialize(exp)
+exp = design.Experiment(name="Cross-modal-timing-test")
+
+control.defaults.window_mode = 1  # 0 = FULLSCREEN
+control.defaults.window_size = (1024, 768)
+control.defaults.open_gl = 2  # blocking on the vertical sync retrace
+control.defaults.audiosystem_buffer_size = 256  # should be large enough to avoid sound buffer underruns (check in Terminal)
+
+control.initialize(exp)
 
 ##
 
-square_top = expyriment.stimuli.Rectangle((200, 200), position=(0, 300))
-tone = expyriment.stimuli.Tone(TONE_DURATION, 440)
+bs = stimuli.BlankScreen()
+square = stimuli.Rectangle((400, 400),
+                               colour=(255, 255, 255),
+                               position=(0, 200))
+tone = stimuli.Tone(toneDuration, 440)
 
-
-square_top.preload()
+bs.preload()
+square.preload()
 tone.preload()
 
-frame = expyriment.stimuli.Canvas((800, 800))
-msg = expyriment.stimuli.TextScreen("",f"""This script displays a white rectangle,
-plays a tone and clears the screen, in a loop.
+##
+
+control.start(skip_ready_screen=True)
+clock = misc.Clock()
+
+exp.screen.clear()
+bs.present(update=True)
+nframe = 0
+
+# Estimate the Frame Rate  (allowing to check if blocking on VSYNC)
+clock.reset_stopwatch()
+bs.present(update=True)
+fps_estimation_duration = 2  # in s
+while clock.stopwatch_time < fps_estimation_duration * 1000:
+    bs.present(update=True)
+    nframe += 1
+FPS = nframe / fps_estimation_duration
+
+square_nframes = int(round(stimDuration / (1000 / FPS)))
+bs_nframes = int(round(blankDuration / (1000 / FPS)))
+
+square_target_duration = 1000 / FPS * square_nframes
+blank_target_duration = 1000 /FPS * bs_nframes
+trial_target_duration = square_target_duration + blank_target_duration
+
+exp.data.write_comment(f'--PARAMETERS')
+exp.data.write_comment(f' Estimated FPS = {FPS}Hz')
+exp.data.write_comment(f' Targeted Square duration = {round(square_target_duration, 2)} ({square_nframes} frames)')
+exp.data.write_comment(f' Targeted Blanck duration = {round(blank_target_duration, 2)} ({bs_nframes} frames)')
+exp.data.write_comment(f' Targeted Trial duration = {round(trial_target_duration, 2)} ({square_nframes + bs_nframes} frames)')
+
+
+## 
+
+def wait_nframes(nframes, FPS=FPS, margin=((1000 / FPS) * 0.5)):
+    """Delay for a duration between (nframes - 1) and (nframes)."""
+    delay = int((nframes * 1000 / FPS) - margin)
+    clock.reset_stopwatch()
+    while clock.stopwatch_time < delay:
+        pass
+
+
+##
+
+
+# Display instructions
+frame = stimuli.Canvas((800, 800))
+msg = stimuli.TextScreen("",
+                         f"""This script runs a loop in which a black screen is displayed, followed by a white rectangle and a pure tone.
 
 This permits to check the timing with some external equipment
 (an oscilloscope, the Blackbox toolkit, etc.).
 
-Currently, the parameters are:
+The current parameters are:
 
-Tone duration = {TONE_DURATION} ms
-Display duration = {SQUARE_DURATION} ms
-SOA = {SOA} ms
-
-These can be changed in the source code.
-
-Press any key to start (Later, to exit the program, just press 'Esc')."""
-                ,
-                position=(0,-200))
+FPS = {FPS} Hz
+Blank duration = {round(blank_target_duration, 2)} ms
+Square duration = {round(square_target_duration, 2)} ms
+Tone duration = {toneDuration} ms
+                         
+Press any key for next screen (Later, to exit the program, just press 'Esc').""",
+                         position=(0, -200))
 msg.plot(frame)
-square_top.plot(frame)
-#square_bottom.plot(frame)
-
-## 
-expyriment.control.start(skip_ready_screen=True)
-
-exp.screen.clear()
+square.plot(frame)
 frame.present()
 exp.keyboard.wait()
+stimuli.TextScreen("",
+                   "Press a key to start").present(clear=True, update=True)
+exp.keyboard.wait()
 
+exp.data.add_variable_names(['trial', 'squareOn', 'blankOn'])
 
-clock = expyriment.misc.Clock()
-
-period = 0
-
-while True:  # until the Esc key is pressed
-    period += 1
-    while (clock.time < (SOA * period)):
-        pass
-
-    if (period % 3) == 0:
-       exp.screen.clear()
-       t = 0 # ?
-    elif (period % 3) == 1:
-        start_time = clock.time
-        t = square_top.present(clear=False)
-        start_time = start_time + t
-        # t = square_top.present(clear=False)  # twice for double buffering
-        while (clock.time - start_time) < SQUARE_DURATION:
-            None
-        exp.data.add([period, 'square', start_time, clock.time ])
-        exp.screen.clear()
-        exp.screen.update()
-
-    elif (period %3) ==2:
-        exp.data.add([period, 'tone', clock.time, 0 ])
-        tone.play()
- 
+itrial = 0
+clock.reset_stopwatch()
+while itrial < nTrials:  # or break when the Esc key is pressed
+    bs.present(update=True)
+    blankOn = clock.stopwatch_time
+    wait_nframes(bs_nframes)
+    square.present(update=True)
+    squareOn = clock.stopwatch_time
+    tone.present()
+    itrial += 1
+    exp.data.add([itrial, squareOn, blankOn])
     exp.keyboard.process_control_keys()
-
-expyriment.control.end()
-
+    wait_nframes(square_nframes)
+    
+control.end()
