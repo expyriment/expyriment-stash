@@ -30,7 +30,7 @@ stimuli.TextScreen('Tearing test', """A moving vertical bar will be displayed.
 
 If the synchronization to vertical blank is set, 
 and the computer is fast enough, 
-the bar should not be brokeni""").present()
+the bar should not be broken""").present()
 exp.keyboard.wait()
 
 t0 = exp.clock.time
