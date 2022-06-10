@@ -49,3 +49,6 @@ nosetests.xml
 
 # backup file
 .bak
+
+data/
+events/
