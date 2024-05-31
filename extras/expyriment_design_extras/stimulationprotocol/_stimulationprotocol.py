@@ -20,7 +20,6 @@ import locale
 import re
 import codecs
 
-from expyriment._internals import is_base_string
 from expyriment.design.randomize import rand_element
 from expyriment.design import Block, Trial
 from expyriment.misc import unicode2byte, byte2unicode, create_colours
@@ -114,7 +113,7 @@ class StimulationProtocol(object):
 
         if isinstance(condition, int):
             pos = condition
-        elif is_base_string(condition):
+        elif isinstance(condition, (str, bytes)):
             pos = self._find_condition_by_name(condition)
             if pos is None:
                 raise ValueError("No condition with name '{0}' found!".format(
