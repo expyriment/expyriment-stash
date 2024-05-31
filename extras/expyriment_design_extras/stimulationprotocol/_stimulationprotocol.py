@@ -167,10 +167,10 @@ class StimulationProtocol(object):
         if encoding is None:
             with open(filename, 'r') as f:
                 first_line = f.readline()
-                encoding = re.findall("coding[:=]\s*([-\w.]+)", first_line)
+                encoding = re.findall(r"coding[:=]\s*([-\w.]+)", first_line)
                 if encoding == []:
                     second_line = f.readline()
-                    encoding = re.findall("coding[:=]\s*([-\w.]+)",
+                    encoding = re.findall(r"coding[:=]\s*([-\w.]+)",
                                           second_line)
                     if encoding == []:
                         encoding = [None]
