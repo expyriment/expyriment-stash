@@ -351,9 +351,9 @@ class StimulationProtocol(object):
         else:
             b = block.copy()
             conditions = [x["name"] for x in self.conditions]
-            c1 = [t.get_factor("Condition") in conditions for t in b.trials]
-            c2 = [t.get_factor("condition") in conditions for t in b.trials]
-            if False in c1 and False in c2:
+            c1 = [t.get_factor("Condition", True) in conditions for t in b.trials]
+            c2 = [t.get_factor("condition", True) in conditions for t in b.trials]
+            if None in c1 and None in c2:
                 raise RuntimeError("All trials need matching conditions!")
             if len(set(b.trials)) != len(b.trials):
                 raise RuntimeError("Trials have to be unique!")
@@ -374,8 +374,8 @@ class StimulationProtocol(object):
                             while True:
                                 idx = rand_element(trial_indices)
                                 t = b.trials[idx]
-                                if t.get_factor("Condition") == condition['name'] or \
-                                    t.get_factor("condition") == condition['name']:
+                                if t.get_factor("Condition", True) == condition['name'] or \
+                                    t.get_factor("condition", True) == condition['name']:
                                     b.swap_trials(cnt, idx)
                                     trial_indices.pop(trial_indices.index(cnt))
                                     cnt += 1
