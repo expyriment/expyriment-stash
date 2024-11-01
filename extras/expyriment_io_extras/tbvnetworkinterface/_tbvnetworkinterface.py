@@ -3,7 +3,7 @@
 This module contains a class implementing a network interface for Turbo Brain
 Voyager (see www.brainvoyager.com/products/turbobrainvoyager.html).
 
-Compatible with version 2.4 of the TBV Network Plugin - Server. 
+Compatible with version 3.0 of the TBV Network Plugin - Server. 
 
 """
 from __future__ import absolute_import, print_function, division
@@ -720,6 +720,130 @@ class TbvNetworkInterface(Input, Output):
                 for x in range(0, len(data[4:]) // 4)]
         return [_all[x:x+3] for x in range(0, len(_all), 3)], rt
 
+    # NF Queries
+    def get_nf_baseline(self):
+        """Get the NF baseline calculation value.
+
+        Returns
+        -------
+        nf_baseline : float
+            The NF baseline value.
+        rt : int
+            The time it took to get the data.
+
+        """
+
+        nf_baseline, rt = self.request_data("tGetNFBaseline")
+        return struct.unpack('!f', nf_baseline)[0], rt
+
+    def get_nf_value(self):
+        """Get the current NF value.
+
+        Returns
+        -------
+        nf_value : float
+            The current NF value.
+        rt : int
+            The time it took to get the data.
+
+        """
+
+        nf_value, rt = self.request_data("tGetNFValue")
+        return struct.unpack('!f', nf_value)[0], rt
+
+    def get_nf_max_psc(self):
+        """Get the max psc value.
+
+        Returns
+        -------
+        max_psc : float
+            The max psc value.
+        rt : int
+            The time it took to get the data.
+
+        """
+
+        max_psc, rt = self.request_data("tGetNFMaxPSC")
+        return struct.unpack('!f', max_psc)[0], rt
+
+    def get_nf_avg_last_n(self):
+        """Get the moving average setting.
+
+        Returns
+        -------
+        n_avg : int
+            The moving average setting.
+        rt : int
+            The time it took to get the data.
+
+        """
+
+        n_avg, rt = self.request_data("tGetNFAvgLastN")
+        return struct.unpack('!i', n_avg)[0], rt
+
+    def get_nf_fb_level(self):
+        """Get the current nf feedback level.
+
+        Returns
+        -------
+        nf_fb_lvl : int
+            The current nf feedback level.
+        rt : int
+            The time it took to get the data.
+
+        """
+
+        nf_fb_lvl, rt = self.request_data("tGetNFFbLevel")
+        return struct.unpack('!i', nf_fb_lvl)[0], rt
+
+    def get_nf_target_level(self):
+        """Get the actual target level for NF.
+
+        Returns
+        -------
+        nf_target_lvl : int
+            The actual NF target level.
+        rt : int
+            The time it took to get the data.
+
+        """
+
+        nf_target_lvl, rt = self.request_data("tGetNFTargetLevel")
+        return struct.unpack('!i', nf_target_lvl)[0], rt
+
+
+    def get_nf_bl_wnd_shift_start(self):
+        """Get the baseline window shift at the start of a trial.
+
+        Returns
+        -------
+        nf_bl_wnd_shift_start : int
+            The baseline window shift at the start of a trial
+        rt : int
+            The time it took to get the data.
+
+        """
+
+        nf_bl_wnd_shift_start, rt = self.request_data("tGetNFBLWndShiftStart")
+        return struct.unpack('!i', nf_bl_wnd_shift_start)[0], rt
+
+
+    def get_nf_bl_wnd_shift_end(self):
+        """Get the baseline window shift at the end of a trial.
+
+        Returns
+        -------
+        nf_bl_wnd_shift_end : int
+            The baseline window shift at the end of a trial
+        rt : int
+            The time it took to get the data.
+
+        """
+
+        nf_bl_wnd_shift_end, rt = self.request_data("tGetNFBLWndShiftEnd")
+        return struct.unpack('!i', nf_bl_wnd_shift_end)[0], rt
+
+
     # Volume Data Access Queries
     def get_value_of_voxel_at_time(self, coords, time_point):
         """Get the value of a voxel at a certain time point.
@@ -939,6 +1063,147 @@ class TbvNetworkInterface(Input, Output):
             "tGetCurrentClassifierOutput")
         return ([struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
                  for x in range(0, len(data) // 4)], rt)
+
+     # Semantic NF Queries
+    def get_semantic_nr_of_rois(self):
+        """Get the number of rois used for semantic NF.
+
+         Returns
+         -------
+         sem_nr_of_rois : int
+             The number of rois used for semantic NF.
+         rt : int
+             The time it took to get the data.
+
+         """
+
+        sem_nr_of_rois, rt = self.request_data("tGetSemanticNrOfROIs")
+        return struct.unpack('!i', sem_nr_of_rois)[0], rt
+
+    def get_semantic_nr_of_conditions(self):
+        """Get the number of conditions for the semantic NF.
+   
+        Returns
+        -------
+        sem_nr_of_cond : int
+            The number of conditions for the semantic NF.
+        rt : int
+            The time it took to get the data.
+   
+        """
+   
+        sem_nr_of_cond, rt = self.request_data("tGetSemanticNrOfConditions")
+        return struct.unpack('!i', sem_nr_of_cond)[0], rt
+    
+    def get_semantic_nr_of_voxels(self, roi):
+        """Get the number of voxels for the semantic NF.
+   
+        Returns
+        -------
+        sem_nr_of_voxels : int
+            The number of conditions for the semantic NF.
+        rt : int
+            The time it took to get the data.
+   
+        """
+        roi = struct.pack('!i', roi)
+        data, rt = self.request_data(
+            "tGetSemanticNrOfVoxels", roi)
+        if data is None:
+            return None, rt
+        elif data[:14] == "Wrong request!":
+            raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
+        else:
+            return struct.unpack('!i', data[4:])[0], rt
+    
+    def get_semantic_multi_voxel_pattern(self):
+        """Get the current semantic multi-voxel pattern.
+    
+        Returns
+        -------
+        sem_multi_voxel_pattern : list of list of list of float
+            The semantic multi-voxel pattern as a three-dimensional array 
+            [get_semantic_nr_of_rois][get_semantic_nr_of_conditions][get_semantic_nr_of_voxels].
+        rt : int
+            The time it took to get the data.
+        """
+    
+        # Get dimensions: number of ROIs, conditions, and voxels
+        num_rois = self.get_semantic_nr_of_rois()
+        num_conditions = self.get_semantic_nr_of_conditions()
+        num_voxels = self.get_semantic_nr_of_voxels()
+        
+        # Request the raw binary data
+        sem_multi_voxel_pattern_raw, rt = self.request_data("tGetSemanticMultiVoxelPattern")
+        
+        # Calculate total number of floats to unpack
+        num_floats = num_rois * num_conditions * num_voxels
+        
+        # Unpack the binary data as a flat list of floats
+        sem_multi_voxel_pattern_floats = struct.unpack(f'!{num_floats}f', sem_multi_voxel_pattern_raw)
+        
+        # Reshape into a 3D array (list of lists of lists)
+        sem_multi_voxel_pattern = [
+            [
+                sem_multi_voxel_pattern_floats[i * num_conditions * num_voxels + j * num_voxels:
+                                               i * num_conditions * num_voxels + (j + 1) * num_voxels]
+                for j in range(num_conditions)
+            ]
+            for i in range(num_rois)
+        ]
+        
+        return sem_multi_voxel_pattern, rt
+    
+    def get_semantic_feedback_pattern(self):
+        """Get the current semantic feedback pattern.
+        
+        Returns
+        -------
+        sem_feedback_pattern : list of lists of floats
+            The semantic feedback pattern as a two-dimensional array, where each sublist
+            corresponds to an ROI and contains its respective voxel values.
+        rt : int
+            The time it took to get the data.
+        """
+        
+        # Get the number of ROIs
+        num_rois = self.get_semantic_nr_of_rois()[0]
+        
+        # Request the raw binary data
+        sem_feedback_pattern_raw, rt = self.request_data("tGetSemanticFeedbackPattern")
+        
+        # Track the offset as we unpack each ROI's data
+        offset = 0
+        sem_feedback_pattern = []
+    
+        for roi in range(num_rois):
+            # Get the number of voxels for the current ROI
+            num_voxels = self.get_semantic_nr_of_voxels(roi)[0]
+            
+            # Unpack the corresponding number of floats for this ROI
+            roi_voxels = struct.unpack_from(f'!{num_voxels}f', sem_feedback_pattern_raw, offset)
+            sem_feedback_pattern.append(list(roi_voxels))
+            
+            # Update the offset for the next ROI
+            offset += num_voxels * 4  # 4 bytes per float in the binary data
+    
+        return sem_feedback_pattern, rt
+    
+    def get_semantic_multi_voxel_pattern(self):
+        """Get the NF baseline calculation value.
+   
+        Returns
+        -------
+        nf_baseline : float
+            The NF baseline value.
+        rt : int
+            The time it took to get the data.
+   
+        """
+   
+        nf_baseline, rt = self.request_data("tGetSemanticMultiVoxelPattern")
+        return struct.unpack('!f', nf_baseline)[0], rt
+
 
     # Functional Connectivity
     def get_pearson_correlation(self, window_size):  # TODO: Needs testing!
