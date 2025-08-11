@@ -16,7 +16,10 @@ __revision__ = ''
 __date__ = ''
 
 
-class StimulusCloud(object):
+from abc import ABC
+
+
+class StimulusCloud(ABC):
     """A stimulus cloud class.
 
     This class produces a cloud of ANY visual stimuli.

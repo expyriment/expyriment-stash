@@ -6,7 +6,7 @@ from __future__ import division
 
 from expyriment import control, stimuli, misc
 
-control.defaults.open_gl = False # switch off opengl to avoid screen refesh sync
+control.defaults.opengl = False # switch off opengl to avoid screen refesh sync
 
 exp = control.initialize()
 control.start()

@@ -16,7 +16,10 @@ __revision__ = ''
 __date__ = ''
 
 
-class StimulusCircle(object):
+from abc import ABC
+
+
+class StimulusCircle(ABC):
     """A stimulus circle class.
 
     """

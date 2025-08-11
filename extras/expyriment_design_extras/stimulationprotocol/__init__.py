@@ -16,7 +16,10 @@ __revision__ = ''
 __date__ = ''
 
 
-class StimulationProtocol(object):
+from abc import ABC
+
+
+class StimulationProtocol(ABC):
     """A class implementing a stimulation protocol."""
 
     def __init__(self, unit):

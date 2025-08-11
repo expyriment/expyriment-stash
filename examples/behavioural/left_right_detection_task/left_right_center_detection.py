@@ -19,6 +19,8 @@ xpy.control.defaults.window_mode = 1  # 0=FULLSCREEN
 xpy.control.defaults.window_size = 1024, 768
 xpy.control.set_develop_mode()
 
+N_BLOCKS = 4
+
 # DESIGN
 exp = xpy.design.Experiment(name="My Experiment")
 
@@ -33,7 +35,6 @@ If it is on the left, you must press 'F', 'G' if is in the center 'G', 'H' if it
 
 Press a key to start the first block (1/{N_BLOCKS})""")
 
-N_BLOCKS = 4
 
 target_location = ['left', 'center', 'right']
 nrep_by_location = 5
@@ -88,8 +89,8 @@ for iblock, block in enumerate(exp.blocks):
     proportion_correct = good / len(block.trials)
     xpy.stimuli.TextScreen("", f"""
     %correct responses = {100 * proportion_correct:3.1f}%
-    
+
     Press any key to start next block ({iblock + 2}/{N_BLOCKS})""").present()
     exp.keyboard.wait()
-    
+
 xpy.control.end(goodbye_text="Thank you for participating!")

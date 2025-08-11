@@ -6,6 +6,7 @@ This module contains a class implementing a Cedrus XID response device.
 from __future__ import absolute_import, print_function, division
 from builtins import *
 
+
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 __version__ = ''
@@ -13,13 +14,14 @@ __revision__ = ''
 __date__ = ''
 
 
+from abc import ABC
 try:
     import pyxid as _pyxid
 except:
     _pyxid = None
 
 
-class CedrusResponseDevice(object):
+class CedrusResponseDevice(ABC):
     """A class implementing a Cedrus XID response device.
 
     Notes

@@ -7,6 +7,7 @@ This module contains a class implementing parallel port input/output.
 from __future__ import absolute_import, print_function, division
 from builtins import *
 
+
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
 __version__ = ''
@@ -14,13 +15,17 @@ __revision__ = ''
 __date__ = ''
 
 
+from abc import ABC
+from types import ModuleType
+from sys import platform
+
 try:
     import parallel
 except:
     parallel = None
 
 
-class SimpleParallelPort(object):
+class SimpleParallelPort(ABC):
     """A class implementing a parallel port input and output.
 
     Notes

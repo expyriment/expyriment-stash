@@ -20,7 +20,7 @@ exp = design.Experiment(name="Cross-modal-timing-test")
 
 control.defaults.window_mode = 1  # 0 = FULLSCREEN
 control.defaults.window_size = (1024, 768)
-control.defaults.open_gl = 2  # blocking on the vertical sync retrace
+control.defaults.opengl = 2  # blocking on the vertical sync retrace
 control.defaults.audiosystem_buffer_size = 256  # should be large enough to avoid sound buffer underruns (check in Terminal)
 
 control.initialize(exp)
@@ -83,7 +83,7 @@ def wait_nframes(nframes, FPS=FPS, margin=((1000 / FPS) * 0.5)):
 
 
 # Display instructions
-frame = stimuli.Canvas((800, 800))
+frame = stimuli.Canvas((850, 850))
 msg = stimuli.TextScreen("",
                          f"""This script runs a loop in which a black screen is displayed, followed by a white rectangle and a pure tone.
 
@@ -96,7 +96,7 @@ FPS = {FPS} Hz
 Blank duration = {round(blank_target_duration, 2)} ms
 Square duration = {round(square_target_duration, 2)} ms
 Tone duration = {toneDuration} ms
-                         
+
 Press any key for next screen (Later, to exit the program, just press 'Esc').""",
                          position=(0, -200))
 msg.plot(frame)
@@ -122,5 +122,5 @@ while itrial < nTrials:  # or break when the Esc key is pressed
     exp.data.add([itrial, squareOn, blankOn])
     exp.keyboard.process_control_keys()
     wait_nframes(square_nframes)
-    
+
 control.end()

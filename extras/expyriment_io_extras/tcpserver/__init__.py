@@ -6,6 +6,7 @@ This module contains a class implementing a TCP network server.
 from __future__ import absolute_import, print_function, division
 from builtins import *
 
+
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 __version__ = ''
@@ -13,7 +14,10 @@ __revision__ = ''
 __date__ = ''
 
 
-class TcpServer(object):
+from abc import ABC
+
+
+class TcpServer(ABC):
     """A class implementing a TCP network server for a single client."""
 
     def __init__(self, port, default_package_size=1024, start_listening=True):

@@ -17,7 +17,10 @@ __revision__ = ''
 __date__ = ''
 
 
-class LcdSymbol(object):
+from abc import ABC
+
+
+class LcdSymbol(ABC):
     """A LCD symbol class.
 
     IDs for points and line ::

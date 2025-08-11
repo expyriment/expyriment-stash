@@ -16,7 +16,10 @@ __revision__ = ''
 __date__ = ''
 
 
-class ThermometerDisplay(object):
+from abc import ABC
+
+
+class ThermometerDisplay(ABC):
     """A class implementing a thermometer display."""
 
     def __init__(self, state, goal=None, size=(128,340), nr_segments=10,

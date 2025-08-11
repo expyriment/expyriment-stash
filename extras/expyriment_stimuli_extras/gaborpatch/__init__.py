@@ -9,6 +9,7 @@ This module contains a class implementing a Gabor patch stimulus.
 from __future__ import absolute_import, print_function, division
 from builtins import *
 
+
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 __version__ = ''
@@ -16,7 +17,10 @@ __revision__ = ''
 __date__ = ''
 
 
-class GaborPatch(object):
+from abc import ABC
+
+
+class GaborPatch(ABC):
     """A class implementing a Gabor Patch."""
 
     def __init__(self, position=None,

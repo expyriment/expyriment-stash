@@ -6,6 +6,7 @@ This module contains a class implementing a TCP network client.
 from __future__ import absolute_import, print_function, division
 from builtins import *
 
+
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 __version__ = ''
@@ -13,7 +14,10 @@ __revision__ = ''
 __date__ = ''
 
 
-class TcpClient(object):
+from abc import ABC
+
+
+class TcpClient(ABC):
     """A class implementing a TCP network client."""
 
     def __init__(self, host, port, default_package_size=1024, connect=True):

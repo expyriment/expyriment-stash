@@ -72,8 +72,7 @@ class MidiIn(Input):
         if _midi is None:
             return
         indevices = []
-        all_ids = _midi.get_count()
-        for device_id in all_ids:
+        for device_id in range(_midi.get_count()):
             info = _midi.get_device_info(device_id)
             if info[2] == 1:
                 indevices.add([device_id, info[1]])

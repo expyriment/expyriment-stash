@@ -7,6 +7,7 @@ This module contains a class implementing a MIDI input device.
 from __future__ import absolute_import, print_function, division
 from builtins import *
 
+
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 __version__ = ''
@@ -14,6 +15,7 @@ __revision__ = ''
 __date__ = ''
 
 
+from abc import ABC
 try:
     from pygame import midi as _midi
     _midi.init()
@@ -21,7 +23,7 @@ except:
     _midi = None
 
 
-class MidiIn(object):
+class MidiIn(ABC):
     """A class implementing a MIDI input.
 
     **EXPERIMENTAL!**
@@ -55,8 +57,7 @@ class MidiIn(object):
         if _midi is None:
             return
         indevices = []
-        all_ids = _midi.get_count()
-        for device_id in all_ids:
+        for device_id in range(_midi.get_count()):
             info = _midi.get_device_info(device_id)
             if info[2] == 1:
                 indevices.add([device_id, info[1]])

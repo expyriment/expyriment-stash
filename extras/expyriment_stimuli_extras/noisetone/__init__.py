@@ -17,7 +17,10 @@ __revision__ = ''
 __date__ = ''
 
 
-class NoiseTone(object):
+from abc import ABC
+
+
+class NoiseTone(ABC):
     """A class implementing a noise tone stimulus."""
 
     def __init__(self, duration, samplerate=44100, bitdepth=16,

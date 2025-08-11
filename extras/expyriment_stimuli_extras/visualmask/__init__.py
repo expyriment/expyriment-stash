@@ -16,7 +16,10 @@ __revision__ = ''
 __date__ = ''
 
 
-class VisualMask(object):
+from abc import ABC
+
+
+class VisualMask(ABC):
     """A class implementing a visual mask stimulus."""
 
     def __init__(self, size, position=None, dot_size=(5,5),

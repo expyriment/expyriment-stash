@@ -17,7 +17,10 @@ __revision__ = ''
 __date__ = ''
 
 
-class PolygonDot(object):
+from abc import ABC
+
+
+class PolygonDot(ABC):
     """A class implementing a dot as a child of PolygonEllipse."""
 
     def __init__(self, radius, position=None, colour=None,

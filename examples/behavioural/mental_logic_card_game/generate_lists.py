@@ -93,6 +93,6 @@ def generate_list_of_trials():
 
     shuffle(data)
 
-    df = df.append(data, ignore_index=True)
+    df = pd.concat([df, pd.DataFrame(data)], ignore_index=True)
 
     return df

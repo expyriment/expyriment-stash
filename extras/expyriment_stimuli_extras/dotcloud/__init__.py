@@ -17,7 +17,10 @@ __revision__ = ''
 __date__ = ''
 
 
-class DotCloud(object):
+from abc import ABC
+
+
+class DotCloud(ABC):
     """A dot cloud class.
 
     This class creates dots arranged in a circular cloud.

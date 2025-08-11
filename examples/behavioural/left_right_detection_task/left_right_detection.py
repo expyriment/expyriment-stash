@@ -43,7 +43,7 @@ You must respond as quickly as possible as you response-time is measured.
 Rest you index fingers on the response key.
 
 
-Press any key to start. 
+Press any key to start.
 """
 
 

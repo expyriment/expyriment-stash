@@ -7,6 +7,7 @@ Turbo-BrainVoyager (see www.brainvoyager.com/products/turbobrainvoyager.html).
 from __future__ import absolute_import, print_function, division
 from builtins import *
 
+
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 __version__ = ''
@@ -14,7 +15,10 @@ __revision__ = ''
 __date__ = ''
 
 
-class TbvNetworkInterface(object):
+from abc import ABC
+
+
+class TbvNetworkInterface(ABC):
     """A class implementing a network interface to Turbo-BrainVoyager.
 
     See http://www.brainvoyager.com/products/turbobrainvoyager.html

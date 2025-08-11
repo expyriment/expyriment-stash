@@ -16,7 +16,10 @@ __revision__ = ''
 __date__ = ''
 
 
-class PolygonEllipse(object):
+from abc import ABC
+
+
+class PolygonEllipse(ABC):
     """A class implementing an ellipse stimulus."""
 
     _default_number_of_vertices = 36

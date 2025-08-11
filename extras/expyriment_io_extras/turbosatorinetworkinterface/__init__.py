@@ -15,7 +15,10 @@ __revision__ = ''
 __date__ = ''
 
 
-class TurbosatoriNetworkInterface(object):
+from abc import ABC
+
+
+class TurbosatoriNetworkInterface(ABC):
     """A class implementing a network interface to Turbo-Satori.
 
     See http://www.brainvoyager.com/products/turbosatori.html

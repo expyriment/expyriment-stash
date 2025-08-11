@@ -20,7 +20,7 @@ control.set_develop_mode(True)
 #### read in wordlist file and make design
 exp = design.Experiment("word fragment completion test")
 block = design.Block()
-with open("word_fragment_completion_stimuluslist.csv", "rb") as f:
+with open("word_fragment_completion_stimuluslist.csv", "r") as f:
     reader = csv.reader(f)
     for row in reader:
         trial = design.Trial()

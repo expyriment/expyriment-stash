@@ -1,11 +1,13 @@
 """ analyze reaction-rimes of lexdec experiment """
 
+import glob
+
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 import scipy
 
-results = pd.read_csv('data/lexdec_v3_02_202112131227.xpd', comment='#')
+results = pd.read_csv(glob.glob('data/lexdec*.xpd')[0], comment='#')
 results.head()
 
 # average RTs

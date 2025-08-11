@@ -139,7 +139,7 @@ class NoiseTone(Audio):
         noise = (float(self._amplitude) * random.uniform(-1, 1) for _ in \
                  itertools.count(0))
         channels = ((noise,),)
-        n_samples = self._duration * self._samplerate
+        n_samples = int(self._duration * self._samplerate)
         samples = itertools.islice(zip(
             *(map(sum, zip(*channel)) \
               for channel in channels)), n_samples)
@@ -150,7 +150,7 @@ class NoiseTone(Audio):
                      'not compressed'))
         max_amplitude = float(int((2 ** (self._bitdepth)) / 2) - 1)
         for chunk in self._grouper(2048, samples):
-            frames = ''.join(''.join(struct.pack(
+            frames = b''.join(b''.join(struct.pack(
                 'h', int(max_amplitude * sample)) for sample in channels) \
                 for channels in chunk if channels is not None)
             w.writeframesraw(frames)
