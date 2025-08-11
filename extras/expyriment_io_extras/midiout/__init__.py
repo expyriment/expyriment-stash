@@ -15,11 +15,6 @@ __date__ = ''
 
 
 from abc import ABC
-try:
-    from pygame import midi as _midi
-    _midi.init()
-except:
-    _midi = None
 
 
 class MidiOut(ABC):
@@ -55,11 +50,5 @@ class MidiOut(ABC):
     def get_devices():
         """Get a list of all MIDI output devices connected to the system."""
 
-        if _midi is None:
-            return
-        outdevices = []
-        for device_id in range(_midi.get_count()):
-            info = _midi.get_device_info(device_id)
-            if info[3] == 1:
-                outdevices.add([device_id, info[1]])
-        return outdevices
+        from ._midiout import MidiOut
+        return MidiOut.get_devices()

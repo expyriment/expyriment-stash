@@ -16,11 +16,6 @@ __date__ = ''
 
 
 from abc import ABC
-try:
-    from pygame import midi as _midi
-    _midi.init()
-except:
-    _midi = None
 
 
 class MidiIn(ABC):
@@ -54,13 +49,6 @@ class MidiIn(ABC):
     def get_devices():
         """Get a list of all MIDI input devices connected to the system."""
 
-        if _midi is None:
-            return
-        indevices = []
-        for device_id in range(_midi.get_count()):
-            info = _midi.get_device_info(device_id)
-            if info[2] == 1:
-                indevices.add([device_id, info[1]])
-        return indevices
-
+        from ._midiin import MidiIn
+        return MidiIn.get_devices()
 

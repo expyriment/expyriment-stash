@@ -16,13 +16,6 @@ __date__ = ''
 
 
 from abc import ABC
-from types import ModuleType
-from sys import platform
-
-try:
-    import parallel
-except:
-    parallel = None
 
 
 class SimpleParallelPort(ABC):
@@ -62,25 +55,5 @@ class SimpleParallelPort(ABC):
 
         """
 
-        if not isinstance(parallel, ModuleType):
-            return None
-        ports = []
-        if platform.startswith("linux"): #for Linux operation systems
-            dev = listdir('/dev')
-            for p in dev:
-                if p.startswith("parport"):
-                    ports.append(p)
-        elif platform == "dawin": #for MacOS
-            pass
-        else: #for windows, os2
-            for p in range(256):
-                try:
-                    p = parallel.Parallel(p)
-                    ports.append("LTP{0}".format(p + 1))
-                except:
-                    pass
-        ports.sort()
-
-        return ports
-
-
+        from ._simpleparallelport import SimpleParallelPort
+        return SimpleParallelPort.get_available_ports()
