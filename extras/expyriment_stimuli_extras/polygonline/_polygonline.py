@@ -6,9 +6,9 @@ A Line stimulus.
 This module contains a class implementing a line stimulus.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
+from __future__ import absolute_import, division, print_function
 
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -19,9 +19,9 @@ __date__ = ''
 
 import math
 
-from ._polygonrectangle import PolygonRectangle
-from expyriment import _internals
 from expyriment import misc
+
+from ..polygonrectangle import PolygonRectangle
 
 
 class PolygonLine(PolygonRectangle):
@@ -57,7 +57,7 @@ class PolygonLine(PolygonRectangle):
 
 
 if __name__ == "__main__":
-    from .. import control
+    from expyriment import control
     control.set_develop_mode(True)
     control.defaults.event_logging = 0
     exp = control.initialize()

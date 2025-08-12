@@ -48,7 +48,7 @@ class PolygonRectangle(Shape):
 
 
 if __name__ == "__main__":
-    from .. import control, stimuli
+    from expyriment import control, stimuli
     control.set_develop_mode(True)
     control.defaults.event_logging = 0
     exp = control.initialize()

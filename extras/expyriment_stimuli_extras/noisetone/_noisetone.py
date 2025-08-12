@@ -6,9 +6,9 @@ The noise tone stimulus module.
 This module contains a class implementing a noise tone stimulus.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
+from __future__ import absolute_import, division, print_function
 
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -17,13 +17,13 @@ __revision__ = ''
 __date__ = ''
 
 
-import os
-import wave
-import struct
 import itertools
-import tempfile
-import shutil
+import os
 import random
+import shutil
+import struct
+import tempfile
+import wave
 
 from expyriment.stimuli import defaults as stim_defaults
 from expyriment.stimuli._audio import Audio
@@ -171,7 +171,7 @@ class NoiseTone(Audio):
 
 
 if __name__ == "__main__":
-    from .. import control
+    from expyriment import control
     control.set_develop_mode(True)
     control.defaults.event_logging = 0
     exp = control.initialize()

@@ -6,9 +6,9 @@ A stimulus cloud stimulus.
 This module contains a class implementing a stimulus cloud stimulus.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
+from __future__ import absolute_import, division, print_function
 
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>'
 __version__ = ''
@@ -19,7 +19,6 @@ __date__ = ''
 import random
 
 import pygame
-
 from expyriment import _internals
 from expyriment.stimuli._visual import Visual
 
@@ -191,8 +190,9 @@ class StimulusCloud(Visual):
 
 
 if __name__ == "__main__":
-    from ...stimuli._textline import TextLine
-    from .. import control
+    from expyriment import control
+
+    from .stimuli._textline import TextLine
     control.set_develop_mode(True)
     control.defaults.event_logging = 0
     exp = control.initialize()

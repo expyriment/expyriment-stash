@@ -265,7 +265,7 @@ class DotCloud(Visual):
 
 
 if __name__ == "__main__":
-    from .. import control
+    from expyriment import control
     control.set_develop_mode(True)
     control.defaults.event_logging = 0
     exp = control.initialize()

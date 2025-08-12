@@ -6,7 +6,8 @@ A stimulus circle stimulus.
 This module contains a class implementing a stimulus circle stimulus.
 
 """
-from __future__ import absolute_import, print_function, division
+from __future__ import absolute_import, division, print_function
+
 from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -16,11 +17,10 @@ __revision__ = ''
 __date__ = ''
 
 
-import random
 import math
+import random
 
 import pygame
-
 from expyriment.stimuli._visual import Visual
 
 
@@ -202,8 +202,8 @@ class StimulusCircle(Visual):
 
 
 if __name__ == "__main__":
-    from ...stimuli._textline import TextLine
-    from ... import control
+    from expyriment import control
+    from expyriment.stimuli._textline import TextLine
     control.set_develop_mode(True)
     control.defaults.event_logging = 0
     exp = control.initialize()

@@ -248,7 +248,7 @@ class RandomDotKinematogram(Stimulus):
             (e.g. io.StreamingButtonBox)
 
         """
-        from ... import _internals
+        from expyriment import _internals
         RT = Clock()
         if button_box is None:
             button_box = _internals.active_exp.keyboard
@@ -387,7 +387,7 @@ class MovingPosition(object):
 
 
 if __name__ == "__main__":
-    from .. import control, design
+    from expyriment import control, design
     control.set_develop_mode(True)
     exp = control.initialize()
     direction = design.randomise.rand_int(0, 360)

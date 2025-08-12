@@ -6,7 +6,8 @@ An ellipse stimulus.
 This module contains a class implementing an ellipse stimulus.
 
 """
-from __future__ import absolute_import, print_function, division
+from __future__ import absolute_import, division, print_function
+
 from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -17,8 +18,9 @@ __date__ = ''
 
 
 import math as _math
-from expyriment.stimuli._shape import Shape
+
 from expyriment.misc import geometry as _geometry
+from expyriment.stimuli._shape import Shape
 
 
 class PolygonEllipse(Shape):
@@ -50,12 +52,12 @@ class PolygonEllipse(Shape):
         """
 
         Shape.__init__(self, position=position, colour=colour,
-                         anti_aliasing=anti_aliasing,
-                         line_width=line_width)
+                         anti_aliasing=anti_aliasing)
 
         self._resolution_factor = resolution_factor
         self._ellipse_size = list(size)
         self._circumference = None
+        self._line_with = line_width
 
         n_vtx = self._default_number_of_vertices * self._resolution_factor
         s = 2 * _math.pi / n_vtx
@@ -69,6 +71,10 @@ class PolygonEllipse(Shape):
         self._vertices = _geometry.points_to_vertices(points)
         self._update_points()
 
+    @property
+    def line_width(self):
+        """Getter for line width."""
+        return self._line_with
 
     @property
     def circumference(self):
@@ -103,7 +109,7 @@ class PolygonEllipse(Shape):
 
 
 if __name__ == "__main__":
-    from .. import control
+    from expyriment import control
     control.set_develop_mode(True)
     control.defaults.event_logging = 0
     exp = control.initialize()

@@ -6,7 +6,8 @@ A Visual Mask.
 This module contains a class implementing a Visual Mask.
 
 """
-from __future__ import absolute_import, print_function, division
+from __future__ import absolute_import, division, print_function
+
 from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -16,13 +17,13 @@ __revision__ = ''
 __date__ = ''
 
 
-from random import shuffle
-import tempfile
 import os
+import tempfile
+from random import shuffle
 from types import ModuleType
 
 try:
-    from PIL import Image, ImageDraw, ImageFilter #import PIL
+    from PIL import Image, ImageDraw, ImageFilter  # import PIL
 except:
     Image = None
 
@@ -103,7 +104,7 @@ The Python package 'Python Imaging Library (PIL)' is not installed."""
             self.unload()
 
         s = (self._size[0] + 4 * self.smoothing,
-             self._size[1] + 4 * self.smoothing) #somewhat larger mask 
+             self._size[1] + 4 * self.smoothing) #somewhat larger mask
         im = Image.new("RGB", s)
         draw = ImageDraw.Draw(im)
         draw.rectangle([(0, 0), s], outline=self.background_colour,
@@ -136,7 +137,7 @@ The Python package 'Python Imaging Library (PIL)' is not installed."""
 
 
 if __name__ == "__main__":
-    from ... import control
+    from expy import control
     control.set_develop_mode(True)
     control.defaults.event_logging = 0
     exp = control.initialize()
