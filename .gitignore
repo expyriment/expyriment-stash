@@ -44,11 +44,23 @@ nosetests.xml
 # PyPi
 .pypirc
 
+# VS code
+.vscode
+
+# virtual environment
+venv/
+.venv/
+
+# UV
+uv.lock
 # macOS
 .DS_Store
 
 # backup file
 .bak
+
+# test scripts
+test-*
 
 data/
 events/

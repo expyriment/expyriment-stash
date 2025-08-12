@@ -1,0 +1,22 @@
+[project]
+name = "expyriment-stash"
+version = "1.0.0"
+authors = [
+  {name = "Florian Krause", email = "florian@expyriment.org"},
+  {name = "Oliver Lindemann", email = "oliver@expyriment.org"},
+]
+description = 'Collection of Expyriment examples, plugins (extras) and tools.'
+readme = "README.md"
+license = "GPL-3.0-or-later"
+license-files=["COPYING.txt"]
+repository = "https://github.com/expyriment/expyriment-stash"
+keywords = ["experiment control", "open science",
+            "neuroscience", "experimental psychology"]
+classifiers = [
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+
+requires-python = ">=3.10"
+dependencies = ["expyriment>=1.0"]
