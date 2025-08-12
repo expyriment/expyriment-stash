@@ -65,8 +65,9 @@ class PolygonEllipse(Shape):
         l = 0
         points = []
         while l < 2 * _math.pi:
-            points.append([.5 * _math.cos(l) * w + .5 * w,
-                           .5 * _math.sin(l) * h + .5 * h])
+            p = _geometry.XYPoint(x = .5 * _math.cos(l) * w + .5 * w,
+                              y = .5 * _math.sin(l) * h + .5 * h)
+            points.append(p)
             l = l + s
         self._vertices = _geometry.points_to_vertices(points)
         self._update_points()
