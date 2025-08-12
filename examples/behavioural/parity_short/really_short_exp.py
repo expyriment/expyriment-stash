@@ -4,15 +4,15 @@
 """
 A very short example experiment in 16 lines of pure code.
 
-Participants have to indicate the parity of digits by pressing 
+Participants have to indicate the parity of digits by pressing
 the left arrow key for odd and the right arrow key for even numbers.
 
 """
 
-from expyriment import control, stimuli, design, misc
+from expyriment import control, design, misc, stimuli
 
 digit_list = [1, 2, 3, 4, 6, 7, 8, 9] * 12
-design.randomize.shuffle_list(digit_list)
+design.randomise.shuffle_list(digit_list)
 
 exp = control.initialize()
 exp.data_variable_names = ["digit", "btn", "rt", "error"]

@@ -6,9 +6,9 @@ A random dot kinematogram (stimulus-like).
 This module contains a class implementing a random dot kinematogram.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
+from __future__ import absolute_import, division, print_function
 
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -21,9 +21,9 @@ import math
 import random
 
 from expyriment.io import Keyboard
+from expyriment.misc import Clock
 from expyriment.stimuli import Canvas, Circle
 from expyriment.stimuli._stimulus import Stimulus
-from expyriment.misc import Clock
 
 
 class RandomDotKinematogram(Stimulus):
@@ -104,9 +104,9 @@ class RandomDotKinematogram(Stimulus):
         self.dots = [self._make_random_dot(direction=None) for x in range(n_dots)]
         self.target_dot_ratio = target_dot_ratio
 
-    def reset_all_ages(self, randomize_ages=False):
-        """Reset all ages (born at current time) and randomize start age if required"""
-        map(lambda x : x.reset_age(randomize_age=randomize_ages), self.dots)
+    def reset_all_ages(self, randomise_ages=False):
+        """Reset all ages (born at current time) and randomise start age if required"""
+        map(lambda x : x.reset_age(randomise_age=randomise_ages), self.dots)
 
     @property
     def n_dots(self):
@@ -153,7 +153,7 @@ class RandomDotKinematogram(Stimulus):
                     if not d.is_target:
                         self.dots.remove(d)
                         break
-                d = self._make_random_dot(direction=self.target_direction, randomize_age=True)
+                d = self._make_random_dot(direction=self.target_direction, randomise_age=True)
                 d.is_target = True
                 self.dots.append(d)
             elif goal_n_targets < curr_n_targets:
@@ -162,7 +162,7 @@ class RandomDotKinematogram(Stimulus):
                     if d.is_target:
                         self.dots.remove(d)
                         break
-                self.dots.append(self._make_random_dot(direction=None, randomize_age=True))
+                self.dots.append(self._make_random_dot(direction=None, randomise_age=True))
             curr_n_targets = self.n_target_dots
 
     @property
@@ -170,7 +170,7 @@ class RandomDotKinematogram(Stimulus):
         """Getter for the last plotted stimulus"""
         return self._canvas
 
-    def _make_random_dot(self, direction=None, randomize_age=False):
+    def _make_random_dot(self, direction=None, randomise_age=False):
         """make a random dot"""
         while (True):
             pos = (int(self.area_radius - random.random()*2*self.area_radius),
@@ -184,8 +184,8 @@ class RandomDotKinematogram(Stimulus):
                         speed = self.dot_speed,
                         lifetime = self.dot_lifetime,
                         north_up_clockwise=self.north_up_clockwise)
-        if randomize_age:
-            rtn.reset_age(randomize_age=True)
+        if randomise_age:
+            rtn.reset_age(randomise_age=True)
         return rtn
 
     def make_frame(self, background_stimulus=None):
@@ -253,7 +253,7 @@ class RandomDotKinematogram(Stimulus):
         if button_box is None:
             button_box = _internals.active_exp.keyboard
         button_box.clear()
-        self.reset_all_ages(randomize_ages=True)
+        self.reset_all_ages(randomise_ages=True)
         last_change_time = RT.stopwatch_time
         while(True):
             if None not in change_parameter:
@@ -325,9 +325,9 @@ class MovingPosition(object):
         """Return the age of a dot"""
         return self._clock.stopwatch_time + self.extra_age
 
-    def reset_age(self, randomize_age=False):
-        """Reset the age to zero (born at current time) or if randomize_age=True, age will randomized."""
-        if randomize_age:
+    def reset_age(self, randomise_age=False):
+        """Reset the age to zero (born at current time) or if randomise_age=True, age will randomised."""
+        if randomise_age:
             self.extra_age = int(random.random() * self.lifetime)
         self._clock.reset_stopwatch()
 
@@ -390,7 +390,7 @@ if __name__ == "__main__":
     from .. import control, design
     control.set_develop_mode(True)
     exp = control.initialize()
-    direction = design.randomize.rand_int(0, 360)
+    direction = design.randomise.rand_int(0, 360)
     # first rdk stimulus with 20% consitencyin random direction
     rdk = RandomDotKinematogram(area_radius=200, n_dots=150,
           target_direction = direction,

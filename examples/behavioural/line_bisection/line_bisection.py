@@ -9,7 +9,7 @@ This example is appropriate to illustrates the use of the Android runtime enviro
 """
 from __future__ import division
 
-from expyriment import control, stimuli, io, design, misc
+from expyriment import control, design, io, misc, stimuli
 
 # settings
 design.defaults.experiment_background_colour = misc.constants.C_GREY
@@ -68,7 +68,7 @@ exp.mouse.show_cursor()
 while True:
     # find random position
     rx, ry = ((exp.screen.size[0]-line_length)//2, (exp.screen.size[1]-50)//2)
-    pos = [design.randomize.rand_int(-rx, rx), design.randomize.rand_int(-ry, ry)]
+    pos = [design.randomise.rand_int(-rx, rx), design.randomise.rand_int(-ry, ry)]
     # present task
     judgment = line_bisection_task(line_length, position=pos)
     # save data

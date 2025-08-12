@@ -22,7 +22,7 @@ import locale
 import re
 
 from expyriment.design import Block, Trial
-from expyriment.design.randomize import rand_element
+from expyriment.design.randomise import rand_element
 from expyriment.misc import byte_to_unicode, create_colours, unicode_to_byte
 
 
@@ -318,7 +318,7 @@ class StimulationProtocol(object):
         "condition" or "Condition", with the the factor level names
         corresponding to the condition names of the protocol, then the
         returned block will be a copy of the experimental block, with the
-        order of trials randomized, but in line with the order of conditions
+        order of trials randomised, but in line with the order of conditions
         specified in the protocol.
 
         The resulting block will have the following trial factors:

@@ -10,9 +10,8 @@ ordinal sequences is spatially organized. Cognition, 87(3), B87-95.
 
 """
 
-from expyriment import design, control, stimuli
+from expyriment import control, design, stimuli
 from expyriment.misc import constants
-
 
 control.set_develop_mode(False)
 
@@ -61,7 +60,7 @@ def run_trial(cnt, trial):
     # present Fixation cross and prepare trial in the meantime
     fixcross.present()
     exp.clock.reset_stopwatch()
-    ISI = design.randomize.rand_int(min_max_ISI[0], min_max_ISI[1])
+    ISI = design.randomise.rand_int(min_max_ISI[0], min_max_ISI[1])
     digit = trial.get_factor("digit")
     target = stimuli.TextLine(text=str(digit), text_size=60)
     target.preload()
