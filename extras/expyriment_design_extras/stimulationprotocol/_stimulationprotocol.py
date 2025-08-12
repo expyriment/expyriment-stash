@@ -6,7 +6,8 @@ A stimulation protocol.
 This module contains a class implementing a stimulation protocol.
 
 """
-from __future__ import absolute_import, print_function, division
+from __future__ import absolute_import, division, print_function
+
 from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -16,13 +17,13 @@ __revision__ = ''
 __date__ = ''
 
 
+import codecs
 import locale
 import re
-import codecs
 
-from expyriment.design.randomize import rand_element
 from expyriment.design import Block, Trial
-from expyriment.misc import unicode2byte, byte2unicode, create_colours
+from expyriment.design.randomize import rand_element
+from expyriment.misc import byte_to_unicode, create_colours, unicode_to_byte
 
 
 class StimulationProtocol(object):
@@ -137,13 +138,13 @@ class StimulationProtocol(object):
                 locale_enc = locale.getdefaultlocale()[1]
             except:
                 locale_enc = "UTF-8"
-            f.write(unicode2byte("# -*- coding: {0} -*-\n".format(locale_enc)))
-            f.write(unicode2byte("#unit={0}\n".format(self._unit)))
-            f.write(unicode2byte("condition,begin,end,weight\n"))
+            f.write(unicode_to_byte("# -*- coding: {0} -*-\n".format(locale_enc)))
+            f.write(unicode_to_byte("#unit={0}\n".format(self._unit)))
+            f.write(unicode_to_byte("condition,begin,end,weight\n"))
             for condition in self._conditions:
                 for event in condition["events"]:
-                    f.write(unicode2byte("{0},{1},{2},{3}\n".format(
-                        unicode2byte(condition["name"]),
+                    f.write(unicode_to_byte("{0},{1},{2},{3}\n".format(
+                        unicode_to_byte(condition["name"]),
                         event["begin"],
                         event["end"],
                         event["weight"])))
@@ -178,7 +179,7 @@ class StimulationProtocol(object):
             encoding = [encoding]
         with codecs.open(filename, 'rb', encoding[0], errors='replace') as f:
             for line in f:
-                line = byte2unicode(line)
+                line = byte_to_unicode(line)
                 if line.startswith("#"):
                     if line.startswith("#unit="):
                         self._unit = line[6:].strip('\n')
@@ -207,41 +208,41 @@ class StimulationProtocol(object):
             filename = filename + ".prt"
 
         with open(filename, 'wb') as f:
-            f.write(unicode2byte("\n"))
-            f.write(unicode2byte("FileVersion:        3\n"))
-            f.write(unicode2byte("\n"))
+            f.write(unicode_to_byte("\n"))
+            f.write(unicode_to_byte("FileVersion:        3\n"))
+            f.write(unicode_to_byte("\n"))
             if self._unit == 'time':
-                f.write(unicode2byte("ResolutionOfTime:   msec\n"))
+                f.write(unicode_to_byte("ResolutionOfTime:   msec\n"))
             elif self._unit == 'volume':
-                f.write(unicode2byte("ResolutionOfTime:   Volumes\n"))
-            f.write(unicode2byte("\n"))
-            f.write(unicode2byte("Experiment:         {0}\n".format(exp_name)))
-            f.write(unicode2byte("\n"))
-            f.write(unicode2byte("BackgroundColor:    0 0 0\n"))
-            f.write(unicode2byte("TextColor:          255 255 255\n"))
-            f.write(unicode2byte("TimeCourseColor:    255 255 255\n"))
-            f.write(unicode2byte("TimeCourseThick:    4\n"))
-            f.write(unicode2byte("ReferenceFuncColor: 0 0 80\n"))
-            f.write(unicode2byte("ReferenceFuncThick: 3\n"))
-            f.write(unicode2byte("\n"))
-            f.write(unicode2byte("ParametricWeights:  1\n"))
-            f.write(unicode2byte("\n"))
-            f.write(unicode2byte("NrOfConditions:     {0}\n".format(len(self._conditions))))
+                f.write(unicode_to_byte("ResolutionOfTime:   Volumes\n"))
+            f.write(unicode_to_byte("\n"))
+            f.write(unicode_to_byte("Experiment:         {0}\n".format(exp_name)))
+            f.write(unicode_to_byte("\n"))
+            f.write(unicode_to_byte("BackgroundColor:    0 0 0\n"))
+            f.write(unicode_to_byte("TextColor:          255 255 255\n"))
+            f.write(unicode_to_byte("TimeCourseColor:    255 255 255\n"))
+            f.write(unicode_to_byte("TimeCourseThick:    4\n"))
+            f.write(unicode_to_byte("ReferenceFuncColor: 0 0 80\n"))
+            f.write(unicode_to_byte("ReferenceFuncThick: 3\n"))
+            f.write(unicode_to_byte("\n"))
+            f.write(unicode_to_byte("ParametricWeights:  1\n"))
+            f.write(unicode_to_byte("\n"))
+            f.write(unicode_to_byte("NrOfConditions:     {0}\n".format(len(self._conditions))))
             if self._unit == "time":
                 rjust = 8
             elif self._unit == "volume":
                 rjust = 4
             colours = create_colours(len(self._conditions))
             for c, condition in enumerate(self._conditions):
-                f.write(unicode2byte("\n"))
-                f.write(unicode2byte(condition["name"] + "\n"))
-                f.write(unicode2byte(repr(len(condition["events"])) + "\n"))
+                f.write(unicode_to_byte("\n"))
+                f.write(unicode_to_byte(condition["name"] + "\n"))
+                f.write(unicode_to_byte(repr(len(condition["events"])) + "\n"))
                 for event in condition["events"]:
-                    f.write(unicode2byte("{0} {1} {2}\n".format(
+                    f.write(unicode_to_byte("{0} {1} {2}\n".format(
                         repr(event["begin"]).rjust(rjust),
                         repr(event["end"]).rjust(rjust),
                         repr(event["weight"]).rjust(2))))
-                f.write(unicode2byte("Color: {0} {1} {2}\n".format(colours[c][0],
+                f.write(unicode_to_byte("Color: {0} {1} {2}\n".format(colours[c][0],
                                                                    colours[c][1],
                                                                    colours[c][2])))
 
@@ -249,7 +250,7 @@ class StimulationProtocol(object):
         """Convert the stimulation protocol to BrainVoyager '.prt' format.
 
         DEPRECATED: Use ``export_to_brainvoyager``.
-        
+
         Parameters
         ----------
         exp_name : str
@@ -258,9 +259,9 @@ class StimulationProtocol(object):
              The name of the file to write
 
         """
-        
+
         self.export_to_brainvoyager(exp_name, filename)
-        
+
     def import_from_brainvoyager(self, prt_file):
         """Import prt file as stimulation protocol.
 
@@ -276,7 +277,7 @@ class StimulationProtocol(object):
         data = []
         with open(prt_file) as f:
             for line in f:
-                data.append(byte2unicode(line.rstrip('\r\n')))
+                data.append(byte_to_unicode(line.rstrip('\r\n')))
         in_body = False
         in_condition = False
         for idx, line in enumerate(data):
@@ -389,43 +390,43 @@ class StimulationProtocol(object):
                         if block is None:
                             b.add_trial(t)
         return b
-    
+
     def get_condition_at_time_point(self, time_point):
         """Get the condition at a certain time point.
-        
+
         Parameters
         ----------
         time_point : int
             the time point to get the corresponding condition from
-            
+
         Returns
         -------
         condition : dict
             the condition the time point belongs to
-            
+
         """
-        
+
         for condition in self._conditions:
             for event in condition['events']:
                 if time_point in range(event['begin'], event['end']+1):
                     return condition
         return None
-    
+
     def get_event_at_time_point(self, time_point):
         """Get the event at a certain time point.
-        
+
         Parameters
         ----------
         time_point : int
             the time point to get the corresponding event from
-            
+
         Returns
         -------
         begin : dict
             the event the time point belongs to
-            
+
         """
-        
+
         for condition in self._conditions:
             for event in condition['events']:
                 if time_point in range(event['begin'], event['end']+1):

@@ -6,9 +6,9 @@ A dotcloud stimulus.
 This module contains a class implementing a dotcloud stimulus.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
+from __future__ import absolute_import, division, print_function
 
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -18,11 +18,11 @@ __date__ = ''
 
 
 import random
-import pygame
 
+import pygame
 from expyriment import _internals, stimuli
-from expyriment.stimuli._visual import Visual
 from expyriment.stimuli._circle import Circle
+from expyriment.stimuli._visual import Visual
 
 
 class DotCloud(Visual):

@@ -3,7 +3,8 @@
 This module contains a class implementing a TCP network server.
 
 """
-from __future__ import absolute_import, print_function, division
+from __future__ import absolute_import, division, print_function
+
 from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -13,15 +14,14 @@ __revision__ = ''
 __date__ = ''
 
 
-import socket
 import errno
+import socket
 from types import FunctionType
 
 from expyriment import _internals
-from expyriment.misc._timer import get_time
 from expyriment._internals import CallbackQuitEvent
-from expyriment.io._keyboard import Keyboard
 from expyriment.io._input_output import Input, Output
+from expyriment.misc._timer import get_time
 
 
 class TcpServer(Input, Output):
@@ -231,7 +231,7 @@ class TcpServer(Input, Output):
                 cleared = cleared + self._socket.recv(1024)
             except:
                 break
-                
+
         if self._logging:
             _internals.active_exp._event_file_log(
                             "TcpServer,cleared,{0}".format(len(cleared)), 2)

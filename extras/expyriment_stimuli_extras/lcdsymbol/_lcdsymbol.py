@@ -6,9 +6,9 @@ A LCD symbol.
 This module contains a class implementing a LCD symbol.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
+from __future__ import absolute_import, division, print_function
 
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -17,14 +17,14 @@ __revision__ = ''
 __date__ = ''
 
 
-import math
 import copy
+import math
 
 import pygame
-
 from expyriment import _internals, stimuli
 from expyriment.stimuli._visual import Visual
-from ._polygondot import PolygonDot
+
+from ..polygondot import PolygonDot
 
 
 class LcdSymbol(Visual):
@@ -150,8 +150,8 @@ class LcdSymbol(Visual):
                 raise AttributeError(
                     LcdSymbol._getter_exception_message.format("shape"))
         else:
-            if value in self.shapes:
-                self._shape = self.shapes[value]
+            if value in self._shapes:
+                self._shape = self._shapes[value]
             else:
                 self._shape = value
 
@@ -173,7 +173,7 @@ class LcdSymbol(Visual):
             self._height = value[1]
             self._points = (PolygonDot(radius=0, position=(0, 0)),
                            PolygonDot(radius=0, position=(self._width, 0)),
-                           PolygonDot(radisu=0,
+                           PolygonDot(radius=0,
                                position=(0, math.floor(self._height / 2))),
                            PolygonDot(radius=0, position=(self._width,
                                          math.floor(self._height / 2))),

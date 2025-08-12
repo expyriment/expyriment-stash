@@ -3,10 +3,11 @@
 This module contains a class implementing a network interface for Turbo Brain
 Voyager (see www.brainvoyager.com/products/turbobrainvoyager.html).
 
-Compatible with version 3.0 of the TBV Network Plugin - Server. 
+Compatible with version 3.0 of the TBV Network Plugin - Server.
 
 """
-from __future__ import absolute_import, print_function, division
+from __future__ import absolute_import, division, print_function
+
 from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -19,9 +20,10 @@ __date__ = ''
 import struct
 
 from expyriment import _internals
-from expyriment.misc._timer import get_time
-from expyriment.misc._miscellaneous import byte2unicode, unicode2byte
 from expyriment.io._input_output import Input, Output
+from expyriment.misc._miscellaneous import byte_to_unicode, unicode_to_byte
+from expyriment.misc._timer import get_time
+
 from ..tcpclient import TcpClient
 
 
@@ -151,7 +153,7 @@ class TbvNetworkInterface(Input, Output):
         length = len(message)
         arg_length = sum([len(x) for x in args])
         data = struct.pack('!q', length + 5 + arg_length) + \
-            b"\x00\x00\x00" + unicode2byte(chr(length + 1)) + message + b"\x00"
+            b"\x00\x00\x00" + unicode_to_byte(chr(length + 1)) + message + b"\x00"
         if len(args) > 0:
             for arg in args:
                 data += arg
@@ -201,7 +203,7 @@ class TbvNetworkInterface(Input, Output):
 
         start = get_time()
         self._tcp.clear()
-        request = unicode2byte(request)
+        request = unicode_to_byte(request)
         self._send(request, *args)
         data = self._wait()
         arg_length = sum([len(x) for x in args])
@@ -209,7 +211,7 @@ class TbvNetworkInterface(Input, Output):
         if data is None:
             raise TbvNetworkInterface.TimeoutError(
                 "Waiting for requested data timed out!")
-        elif byte2unicode(data).startswith("Wrong request!"):
+        elif byte_to_unicode(data).startswith("Wrong request!"):
             raise TbvNetworkInterface.RequestError(
                 "Wrong request '{0}'!".format(data[19:-1]))
         elif data[0:len(request)+1+arg_length] != request+b"\x00"+arg:
@@ -286,7 +288,7 @@ class TbvNetworkInterface(Input, Output):
         """
 
         name, rt = self.request_data("tGetProjectName")
-        return byte2unicode(name[4:-1]), rt
+        return byte_to_unicode(name[4:-1]), rt
 
     def get_watch_folder(self):
         """Get the watch folder.
@@ -301,7 +303,7 @@ class TbvNetworkInterface(Input, Output):
         """
 
         folder, rt = self.request_data("tGetWatchFolder")
-        return byte2unicode(folder[4:-1]), rt
+        return byte_to_unicode(folder[4:-1]), rt
 
     def get_target_folder(self):
         """Get the target folder.
@@ -316,7 +318,7 @@ class TbvNetworkInterface(Input, Output):
         """
 
         folder, rt = self.request_data("tGetTargetFolder")
-        return byte2unicode(folder[4:-1]), rt
+        return byte_to_unicode(folder[4:-1]), rt
 
     def get_feedback_folder(self):
         """Get the feedback folder.
@@ -331,7 +333,7 @@ class TbvNetworkInterface(Input, Output):
         """
 
         folder, rt = self.request_data("tGetFeedbackFolder")
-        return byte2unicode(folder[4:-1]), rt
+        return byte_to_unicode(folder[4:-1]), rt
 
     # Protocol, DM, GLM Queries
     def get_current_protocol_condition(self):
@@ -1082,29 +1084,29 @@ class TbvNetworkInterface(Input, Output):
 
     def get_semantic_nr_of_conditions(self):
         """Get the number of conditions for the semantic NF.
-   
+
         Returns
         -------
         sem_nr_of_cond : int
             The number of conditions for the semantic NF.
         rt : int
             The time it took to get the data.
-   
+
         """
-   
+
         sem_nr_of_cond, rt = self.request_data("tGetSemanticNrOfConditions")
         return struct.unpack('!i', sem_nr_of_cond)[0], rt
-    
+
     def get_semantic_nr_of_voxels(self, roi):
         """Get the number of voxels for the semantic NF.
-   
+
         Returns
         -------
         sem_nr_of_voxels : int
             The number of conditions for the semantic NF.
         rt : int
             The time it took to get the data.
-   
+
         """
         roi = struct.pack('!i', roi)
         data, rt = self.request_data(
@@ -1115,33 +1117,33 @@ class TbvNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             return struct.unpack('!i', data[4:])[0], rt
-    
+
     def get_semantic_multi_voxel_pattern(self):
         """Get the current semantic multi-voxel pattern.
-    
+
         Returns
         -------
         sem_multi_voxel_pattern : list of list of list of float
-            The semantic multi-voxel pattern as a three-dimensional array 
+            The semantic multi-voxel pattern as a three-dimensional array
             [get_semantic_nr_of_rois][get_semantic_nr_of_conditions][get_semantic_nr_of_voxels].
         rt : int
             The time it took to get the data.
         """
-    
+
         # Get dimensions: number of ROIs, conditions, and voxels
         num_rois = self.get_semantic_nr_of_rois()
         num_conditions = self.get_semantic_nr_of_conditions()
         num_voxels = self.get_semantic_nr_of_voxels()
-        
+
         # Request the raw binary data
         sem_multi_voxel_pattern_raw, rt = self.request_data("tGetSemanticMultiVoxelPattern")
-        
+
         # Calculate total number of floats to unpack
         num_floats = num_rois * num_conditions * num_voxels
-        
+
         # Unpack the binary data as a flat list of floats
         sem_multi_voxel_pattern_floats = struct.unpack(f'!{num_floats}f', sem_multi_voxel_pattern_raw)
-        
+
         # Reshape into a 3D array (list of lists of lists)
         sem_multi_voxel_pattern = [
             [
@@ -1151,12 +1153,12 @@ class TbvNetworkInterface(Input, Output):
             ]
             for i in range(num_rois)
         ]
-        
+
         return sem_multi_voxel_pattern, rt
-    
+
     def get_semantic_feedback_pattern(self):
         """Get the current semantic feedback pattern.
-        
+
         Returns
         -------
         sem_feedback_pattern : list of lists of floats
@@ -1165,42 +1167,42 @@ class TbvNetworkInterface(Input, Output):
         rt : int
             The time it took to get the data.
         """
-        
+
         # Get the number of ROIs
         num_rois = self.get_semantic_nr_of_rois()[0]
-        
+
         # Request the raw binary data
         sem_feedback_pattern_raw, rt = self.request_data("tGetSemanticFeedbackPattern")
-        
+
         # Track the offset as we unpack each ROI's data
         offset = 0
         sem_feedback_pattern = []
-    
+
         for roi in range(num_rois):
             # Get the number of voxels for the current ROI
             num_voxels = self.get_semantic_nr_of_voxels(roi)[0]
-            
+
             # Unpack the corresponding number of floats for this ROI
             roi_voxels = struct.unpack_from(f'!{num_voxels}f', sem_feedback_pattern_raw, offset)
             sem_feedback_pattern.append(list(roi_voxels))
-            
+
             # Update the offset for the next ROI
             offset += num_voxels * 4  # 4 bytes per float in the binary data
-    
+
         return sem_feedback_pattern, rt
-    
+
     def get_semantic_multi_voxel_pattern(self):
         """Get the NF baseline calculation value.
-   
+
         Returns
         -------
         nf_baseline : float
             The NF baseline value.
         rt : int
             The time it took to get the data.
-   
+
         """
-   
+
         nf_baseline, rt = self.request_data("tGetSemanticMultiVoxelPattern")
         return struct.unpack('!f', nf_baseline)[0], rt
 

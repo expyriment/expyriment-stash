@@ -6,7 +6,8 @@ A Rectangle stimulus.
 This module contains a class implementing a rectangle stimulus.
 
 """
-from __future__ import absolute_import, print_function, division
+from __future__ import absolute_import, division, print_function
+
 from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -17,7 +18,6 @@ __date__ = ''
 
 
 from expyriment.stimuli._shape import Shape
-from expyriment import _internals
 
 
 class PolygonRectangle(Shape):
@@ -40,10 +40,11 @@ class PolygonRectangle(Shape):
         """
 
         Shape.__init__(self, position=position, colour=colour,
-                       line_width=0, anti_aliasing=anti_aliasing)
+                        anti_aliasing=anti_aliasing)
         self.add_vertex((size[0], 0))
         self.add_vertex((0, size[1]))
         self.add_vertex((-size[0], 0))
+
 
 
 if __name__ == "__main__":
