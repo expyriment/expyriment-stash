@@ -23,7 +23,7 @@ import re
 
 from expyriment.design import Block, Trial
 from expyriment.design.randomise import rand_element
-from expyriment.misc import byte_to_unicode, create_colours, unicode_to_byte
+from expyriment.misc import bytes_to_unicode, create_colours, unicode_to_bytes
 
 
 class StimulationProtocol(object):
@@ -138,13 +138,13 @@ class StimulationProtocol(object):
                 locale_enc = locale.getdefaultlocale()[1]
             except:
                 locale_enc = "UTF-8"
-            f.write(unicode_to_byte("# -*- coding: {0} -*-\n".format(locale_enc)))
-            f.write(unicode_to_byte("#unit={0}\n".format(self._unit)))
-            f.write(unicode_to_byte("condition,begin,end,weight\n"))
+            f.write(unicode_to_bytes("# -*- coding: {0} -*-\n".format(locale_enc)))
+            f.write(unicode_to_bytes("#unit={0}\n".format(self._unit)))
+            f.write(unicode_to_bytes("condition,begin,end,weight\n"))
             for condition in self._conditions:
                 for event in condition["events"]:
-                    f.write(unicode_to_byte("{0},{1},{2},{3}\n".format(
-                        unicode_to_byte(condition["name"]),
+                    f.write(unicode_to_bytes("{0},{1},{2},{3}\n".format(
+                        unicode_to_bytes(condition["name"]),
                         event["begin"],
                         event["end"],
                         event["weight"])))
@@ -179,7 +179,7 @@ class StimulationProtocol(object):
             encoding = [encoding]
         with codecs.open(filename, 'rb', encoding[0], errors='replace') as f:
             for line in f:
-                line = byte_to_unicode(line)
+                line = bytes_to_unicode(line)
                 if line.startswith("#"):
                     if line.startswith("#unit="):
                         self._unit = line[6:].strip('\n')
@@ -208,41 +208,41 @@ class StimulationProtocol(object):
             filename = filename + ".prt"
 
         with open(filename, 'wb') as f:
-            f.write(unicode_to_byte("\n"))
-            f.write(unicode_to_byte("FileVersion:        3\n"))
-            f.write(unicode_to_byte("\n"))
+            f.write(unicode_to_bytes("\n"))
+            f.write(unicode_to_bytes("FileVersion:        3\n"))
+            f.write(unicode_to_bytes("\n"))
             if self._unit == 'time':
-                f.write(unicode_to_byte("ResolutionOfTime:   msec\n"))
+                f.write(unicode_to_bytes("ResolutionOfTime:   msec\n"))
             elif self._unit == 'volume':
-                f.write(unicode_to_byte("ResolutionOfTime:   Volumes\n"))
-            f.write(unicode_to_byte("\n"))
-            f.write(unicode_to_byte("Experiment:         {0}\n".format(exp_name)))
-            f.write(unicode_to_byte("\n"))
-            f.write(unicode_to_byte("BackgroundColor:    0 0 0\n"))
-            f.write(unicode_to_byte("TextColor:          255 255 255\n"))
-            f.write(unicode_to_byte("TimeCourseColor:    255 255 255\n"))
-            f.write(unicode_to_byte("TimeCourseThick:    4\n"))
-            f.write(unicode_to_byte("ReferenceFuncColor: 0 0 80\n"))
-            f.write(unicode_to_byte("ReferenceFuncThick: 3\n"))
-            f.write(unicode_to_byte("\n"))
-            f.write(unicode_to_byte("ParametricWeights:  1\n"))
-            f.write(unicode_to_byte("\n"))
-            f.write(unicode_to_byte("NrOfConditions:     {0}\n".format(len(self._conditions))))
+                f.write(unicode_to_bytes("ResolutionOfTime:   Volumes\n"))
+            f.write(unicode_to_bytes("\n"))
+            f.write(unicode_to_bytes("Experiment:         {0}\n".format(exp_name)))
+            f.write(unicode_to_bytes("\n"))
+            f.write(unicode_to_bytes("BackgroundColor:    0 0 0\n"))
+            f.write(unicode_to_bytes("TextColor:          255 255 255\n"))
+            f.write(unicode_to_bytes("TimeCourseColor:    255 255 255\n"))
+            f.write(unicode_to_bytes("TimeCourseThick:    4\n"))
+            f.write(unicode_to_bytes("ReferenceFuncColor: 0 0 80\n"))
+            f.write(unicode_to_bytes("ReferenceFuncThick: 3\n"))
+            f.write(unicode_to_bytes("\n"))
+            f.write(unicode_to_bytes("ParametricWeights:  1\n"))
+            f.write(unicode_to_bytes("\n"))
+            f.write(unicode_to_bytes("NrOfConditions:     {0}\n".format(len(self._conditions))))
             if self._unit == "time":
                 rjust = 8
             elif self._unit == "volume":
                 rjust = 4
             colours = create_colours(len(self._conditions))
             for c, condition in enumerate(self._conditions):
-                f.write(unicode_to_byte("\n"))
-                f.write(unicode_to_byte(condition["name"] + "\n"))
-                f.write(unicode_to_byte(repr(len(condition["events"])) + "\n"))
+                f.write(unicode_to_bytes("\n"))
+                f.write(unicode_to_bytes(condition["name"] + "\n"))
+                f.write(unicode_to_bytes(repr(len(condition["events"])) + "\n"))
                 for event in condition["events"]:
-                    f.write(unicode_to_byte("{0} {1} {2}\n".format(
+                    f.write(unicode_to_bytes("{0} {1} {2}\n".format(
                         repr(event["begin"]).rjust(rjust),
                         repr(event["end"]).rjust(rjust),
                         repr(event["weight"]).rjust(2))))
-                f.write(unicode_to_byte("Color: {0} {1} {2}\n".format(colours[c][0],
+                f.write(unicode_to_bytes("Color: {0} {1} {2}\n".format(colours[c][0],
                                                                    colours[c][1],
                                                                    colours[c][2])))
 
@@ -277,7 +277,7 @@ class StimulationProtocol(object):
         data = []
         with open(prt_file) as f:
             for line in f:
-                data.append(byte_to_unicode(line.rstrip('\r\n')))
+                data.append(bytes_to_unicode(line.rstrip('\r\n')))
         in_body = False
         in_condition = False
         for idx, line in enumerate(data):
