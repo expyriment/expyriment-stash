@@ -21,7 +21,7 @@ import struct
 
 from expyriment import _internals
 from expyriment.io._input_output import Input, Output
-from expyriment.misc._miscellaneous import byte_to_unicode, unicode_to_byte
+from expyriment.misc._miscellaneous import bytes_to_unicode, unicode_to_bytes
 from expyriment.misc._timer import get_time
 
 from ..tcpclient import TcpClient
@@ -153,7 +153,7 @@ class TbvNetworkInterface(Input, Output):
         length = len(message)
         arg_length = sum([len(x) for x in args])
         data = struct.pack('!q', length + 5 + arg_length) + \
-            b"\x00\x00\x00" + unicode_to_byte(chr(length + 1)) + message + b"\x00"
+            b"\x00\x00\x00" + unicode_to_bytes(chr(length + 1)) + message + b"\x00"
         if len(args) > 0:
             for arg in args:
                 data += arg
@@ -203,7 +203,7 @@ class TbvNetworkInterface(Input, Output):
 
         start = get_time()
         self._tcp.clear()
-        request = unicode_to_byte(request)
+        request = unicode_to_bytes(request)
         self._send(request, *args)
         data = self._wait()
         arg_length = sum([len(x) for x in args])
@@ -211,7 +211,7 @@ class TbvNetworkInterface(Input, Output):
         if data is None:
             raise TbvNetworkInterface.TimeoutError(
                 "Waiting for requested data timed out!")
-        elif byte_to_unicode(data).startswith("Wrong request!"):
+        elif bytes_to_unicode(data).startswith("Wrong request!"):
             raise TbvNetworkInterface.RequestError(
                 "Wrong request '{0}'!".format(data[19:-1]))
         elif data[0:len(request)+1+arg_length] != request+b"\x00"+arg:
@@ -288,7 +288,7 @@ class TbvNetworkInterface(Input, Output):
         """
 
         name, rt = self.request_data("tGetProjectName")
-        return byte_to_unicode(name[4:-1]), rt
+        return bytes_to_unicode(name[4:-1]), rt
 
     def get_watch_folder(self):
         """Get the watch folder.
@@ -303,7 +303,7 @@ class TbvNetworkInterface(Input, Output):
         """
 
         folder, rt = self.request_data("tGetWatchFolder")
-        return byte_to_unicode(folder[4:-1]), rt
+        return bytes_to_unicode(folder[4:-1]), rt
 
     def get_target_folder(self):
         """Get the target folder.
@@ -318,7 +318,7 @@ class TbvNetworkInterface(Input, Output):
         """
 
         folder, rt = self.request_data("tGetTargetFolder")
-        return byte_to_unicode(folder[4:-1]), rt
+        return bytes_to_unicode(folder[4:-1]), rt
 
     def get_feedback_folder(self):
         """Get the feedback folder.
@@ -333,7 +333,7 @@ class TbvNetworkInterface(Input, Output):
         """
 
         folder, rt = self.request_data("tGetFeedbackFolder")
-        return byte_to_unicode(folder[4:-1]), rt
+        return bytes_to_unicode(folder[4:-1]), rt
 
     # Protocol, DM, GLM Queries
     def get_current_protocol_condition(self):
