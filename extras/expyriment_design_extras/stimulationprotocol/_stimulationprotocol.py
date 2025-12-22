@@ -20,13 +20,14 @@ __date__ = ''
 import codecs
 import locale
 import re
+from abc import ABC
 
 from expyriment.design import Block, Trial
 from expyriment.design.randomise import rand_element
 from expyriment.misc import bytes_to_unicode, create_colours, unicode_to_bytes
 
 
-class StimulationProtocol(object):
+class StimulationProtocol(ABC):
     """A class implementing a stimulation protocol."""
 
     def __init__(self, unit):
