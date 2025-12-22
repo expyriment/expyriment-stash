@@ -20,7 +20,7 @@ import struct
 
 from expyriment import _internals
 from expyriment.io._input_output import Input, Output
-from expyriment.misc._miscellaneous import byte_to_unicode, unicode_to_byte
+from expyriment.misc._miscellaneous import bytes_to_unicode, unicode_to_bytes
 from expyriment.misc._timer import get_time
 
 from ..tcpclient import TcpClient
@@ -163,7 +163,7 @@ class TurbosatoriNetworkInterface(Input, Output):
             for arg in args:
                 arg_length += len(arg)
         data = struct.pack('!q', length + 5 + arg_length) + \
-            b"\x00\x00\x00" + unicode_to_byte(chr(length + 1)) + message + b"\x00"
+            b"\x00\x00\x00" + unicode_to_bytes(chr(length + 1)) + message + b"\x00"
         if len(args) > 0:
             for arg in args:
                 data += arg
@@ -200,7 +200,7 @@ class TurbosatoriNetworkInterface(Input, Output):
 
         start = get_time()
         self._tcp.clear()
-        request = unicode_to_byte(request)
+        request = unicode_to_bytes(request)
         self._send(request, *args)
         data = self._wait()
         arg_length = sum([len(x) for x in args])
@@ -209,7 +209,7 @@ class TurbosatoriNetworkInterface(Input, Output):
         if data is None:
             raise TurbosatoriNetworkInterface.TimeoutError(
                 "Waiting for requested data timed out!")
-        elif byte_to_unicode(data).startswith("Wrong request!"):
+        elif bytes_to_unicode(data).startswith("Wrong request!"):
             raise TurbosatoriNetworkInterface.RequestError(
                 "Wrong request '{0}'!".format(data[19:-1]))
         elif data[0:len(request)+1+arg_length] != request+b"\x00"+arg:
@@ -283,7 +283,7 @@ class TurbosatoriNetworkInterface(Input, Output):
         elif folder[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(folder[19:-1]))
         else:
-            return byte_to_unicode(folder[4:-1]), rt
+            return bytes_to_unicode(folder[4:-1]), rt
 
     def get_images_feedback_folder(self):
         """Get the feedback folder for the images.
@@ -303,7 +303,7 @@ class TurbosatoriNetworkInterface(Input, Output):
         elif folder[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(folder[19:-1]))
         else:
-            return byte_to_unicode(folder[4:-1]), rt
+            return bytes_to_unicode(folder[4:-1]), rt
 
     def get_nr_of_selected_channels(self):
         """Get the number of selected channels.
