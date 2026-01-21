@@ -23,6 +23,8 @@ from expyriment._internals import CallbackQuitEvent
 from expyriment.io._input_output import Input, Output
 from expyriment.misc._timer import get_time
 
+import pygame
+
 
 class TcpServer(Input, Output):
     """A class implementing a TCP network server for a single client."""
@@ -207,7 +209,7 @@ class TcpServer(Input, Output):
                             _internals.active_exp.keyboard.process_control_keys():
                                 break
                         else:
-                            _internals.pump_pygame_events()
+                            pygame.event.pump()
 
             if duration:
                 if int((get_time() - start) * 1000) >= duration:

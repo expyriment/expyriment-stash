@@ -15,13 +15,15 @@ __date__ = ''
 
 from types import ModuleType, FunctionType
 
+from expyriment.io._input_output import Input
+from expyriment import _internals, stimuli, misc
+
+import pygame
+
 try:
     import pyxid as _pyxid
 except:
     _pyxid = None
-
-from expyriment.io._input_output import Input
-from expyriment import _internals, stimuli, misc
 
 
 class CedrusResponseDevice(Input):
@@ -256,7 +258,7 @@ class CedrusResponseDevice(Input):
                        _internals.active_exp.keyboard.process_control_keys():
                         break
                 else:
-                    _internals.pump_pygame_events()
+                    pygame.event.pump()
             if duration is not None:
                 if int(self._buffer.clock.time - start) > duration:
                     return (None, None)

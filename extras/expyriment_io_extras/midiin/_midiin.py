@@ -23,6 +23,7 @@ from expyriment.io._input_output import Input
 
 import time
 
+import pygame
 try:
     from pygame import midi as _midi
     _midi.init()
@@ -192,7 +193,7 @@ class MidiIn(Input):
                        _internals.active_exp.keyboard.process_control_keys():
                         break
                 else:
-                    _internals.pump_pygame_events()
+                    pygame.event.pump()
             event = self.read(1)
             if event is not None and event[0][0] in events:
                 rt = int((get_time() - start) * 1000)

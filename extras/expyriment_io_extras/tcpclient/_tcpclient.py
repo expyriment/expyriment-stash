@@ -23,6 +23,8 @@ from expyriment._internals import CallbackQuitEvent
 from expyriment.io._keyboard import Keyboard
 from expyriment.io._input_output import Input, Output
 
+import pygame
+
 
 class TcpClient(Input, Output):
     """A class implementing a TCP network client."""
@@ -230,7 +232,7 @@ class TcpClient(Input, Output):
                             _internals.active_exp.keyboard.process_control_keys():
                                 break
                         else:
-                            _internals.pump_pygame_events()
+                            pygame.event.pump()
 
             if duration:
                 if int((get_time() - start) * 1000) >= duration:
