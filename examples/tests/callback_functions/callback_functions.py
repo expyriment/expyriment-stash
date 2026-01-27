@@ -4,9 +4,6 @@
 """
 Example of the usage of callback_functions in Expyriment
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
-
 from expyriment import control, stimuli
 from expyriment.control import CallbackQuitEvent
 

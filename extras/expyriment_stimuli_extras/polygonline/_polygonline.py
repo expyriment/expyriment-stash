@@ -6,9 +6,6 @@ A Line stimulus.
 This module contains a class implementing a line stimulus.
 
 """
-from __future__ import absolute_import, division, print_function
-
-from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'

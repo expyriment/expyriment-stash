@@ -6,9 +6,6 @@ A thermometer display stimulus.
 This module contains a class implementing a thermometer display stimulus.
 
 """
-from __future__ import absolute_import, division, print_function
-
-from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>'
 __version__ = ''

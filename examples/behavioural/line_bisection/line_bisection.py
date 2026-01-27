@@ -7,8 +7,6 @@ A line bisection task.
 This example is appropriate to illustrates the use of the Android runtime environment for Exypriment on tablet PC.
 
 """
-from __future__ import division
-
 from expyriment import control, design, io, misc, stimuli
 
 # settings

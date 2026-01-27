@@ -4,8 +4,6 @@
 """
 Save design to csv file
 """
-from __future__ import print_function
-
 from expyriment import design
 
 exp = design.Experiment(name="SNARC")

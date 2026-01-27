@@ -6,9 +6,6 @@ A Gabor patch stimulus.
 This module contains a class implementing a Gabor patch stimulus.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
-
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -61,6 +58,6 @@ class GaborPatch(ABC):
         from ._gaborpatch import GaborPatch
         self.__class__ = GaborPatch
         GaborPatch.__init__(self, position=position,
-                            sigma=sigma, theta=theta, lambda_=lambda_, 
-                            phase=phase, psi=psi, gamma=gamma, 
+                            sigma=sigma, theta=theta, lambda_=lambda_,
+                            phase=phase, psi=psi, gamma=gamma,
                             background_colour=background_colour)

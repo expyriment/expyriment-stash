@@ -4,9 +4,6 @@
 This module contains a class implementing a MIDI input device.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
-
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 __version__ = ''
@@ -14,16 +11,16 @@ __revision__ = ''
 __date__ = ''
 
 
-from types import ModuleType, FunctionType
-from expyriment import _internals
-from expyriment._internals import CallbackQuitEvent
-from expyriment.misc._timer import get_time
-from expyriment.io._keyboard import Keyboard
-from expyriment.io._input_output import Input
-
 import time
+from types import FunctionType, ModuleType
 
 import pygame
+from expyriment import _internals
+from expyriment._internals import CallbackQuitEvent
+from expyriment.io._input_output import Input
+from expyriment.io._keyboard import Keyboard
+from expyriment.misc._timer import get_time
+
 try:
     from pygame import midi as _midi
     _midi.init()

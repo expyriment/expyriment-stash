@@ -3,8 +3,6 @@
 This module contains a class implementing a Cedrus XID response device.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -13,12 +11,11 @@ __revision__ = ''
 __date__ = ''
 
 
-from types import ModuleType, FunctionType
-
-from expyriment.io._input_output import Input
-from expyriment import _internals, stimuli, misc
+from types import FunctionType, ModuleType
 
 import pygame
+from expyriment import _internals, misc, stimuli
+from expyriment.io._input_output import Input
 
 try:
     import pyxid as _pyxid

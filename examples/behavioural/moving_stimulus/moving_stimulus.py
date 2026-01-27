@@ -2,9 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """Example: moving stimulus in Expyriment using none OpenGL mode"""
-from __future__ import division
-
-from expyriment import control, stimuli, misc
+from expyriment import control, misc, stimuli
 
 control.defaults.opengl = False # switch off opengl to avoid screen refesh sync
 

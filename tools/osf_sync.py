@@ -1,9 +1,9 @@
-from __future__ import absolute_import, print_function
-from builtins import input
 
-from os import path
 import getpass
+from os import path
+
 import pyosf
+
 
 class OSFSync(object):
     """High-level class for synchronizing subfolders with OSF project files"""
@@ -127,5 +127,7 @@ def osf_sync_files():
     print(sync_info)
 
 
+if __name__ == "__main__":
+    osf_sync_files()
 if __name__ == "__main__":
     osf_sync_files()
