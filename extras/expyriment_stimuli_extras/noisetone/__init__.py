@@ -6,16 +6,9 @@ The noise tone stimulus module.
 This module contains a class implementing a noise tone stimulus.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
-
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
-
 
 from abc import ABC
 

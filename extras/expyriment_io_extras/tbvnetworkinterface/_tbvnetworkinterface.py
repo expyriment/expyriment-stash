@@ -6,16 +6,9 @@ Voyager (see www.brainvoyager.com/products/turbobrainvoyager.html).
 Compatible with version 3.0 of the TBV Network Plugin - Server.
 
 """
-from __future__ import absolute_import, division, print_function
-
-from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
-
 
 import struct
 

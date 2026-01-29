@@ -6,15 +6,9 @@ A stimulation protocol.
 This module contains a class implementing a stimulation protocol.
 
 """
-from __future__ import absolute_import, division, print_function
-
-from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
 
 
 import codecs

@@ -6,16 +6,9 @@ A LCD symbol.
 This module contains a class implementing a LCD symbol.
 
 """
-from __future__ import absolute_import, division, print_function
-
-from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
-
 
 import copy
 import math

@@ -3,17 +3,12 @@
 This module contains a class implementing a MIDI output device.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
-
 
 from types import ModuleType
+
 from expyriment import _internals
 from expyriment.io._input_output import Output
 
@@ -206,4 +201,5 @@ class MidiOut(Output):
 
         """
 
+        self.output.note_off(note, velocity, channel)
         self.output.note_off(note, velocity, channel)

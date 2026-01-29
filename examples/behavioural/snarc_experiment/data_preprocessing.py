@@ -9,10 +9,7 @@ The current script produces two files for different analysis of the SNARC
 effect (ANOVA vs. slopes analysis) using mean and median RTs
 
 """
-from __future__ import print_function
-
-from expyriment.misc import data_preprocessing, constants
-
+from expyriment.misc import constants, data_preprocessing
 
 agg = data_preprocessing.Aggregator(data_folder="./data/",
                                     file_name="snarc_experiment")

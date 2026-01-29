@@ -4,16 +4,10 @@ This module contains a class implementing a network interface for Turbo-Satori
 (see www.brainvoyager.com/products/turbosatori.html).
 
 """
-from __future__ import absolute_import, division, print_function
 
-from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
-
 
 import array as arr
 import struct

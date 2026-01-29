@@ -4,19 +4,13 @@ Input and output parallel port.
 This module contains a class implementing parallel port input/output.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
 
-
-from types import ModuleType
-from sys import platform
 from os import listdir
+from sys import platform
+from types import ModuleType
 
 try:
     import parallel
@@ -24,7 +18,7 @@ except:
     parallel = None
 
 from expyriment import _internals
-from expyriment.io._input_output  import Input, Output
+from expyriment.io._input_output import Input, Output
 
 
 class SimpleParallelPort(Input, Output):
