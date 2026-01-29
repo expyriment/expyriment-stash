@@ -8,10 +8,6 @@ This module contains a class implementing a thermometer display stimulus.
 """
 
 __author__ = 'Florian Krause <florian@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
-
 
 import pygame
 from expyriment.stimuli import Rectangle
